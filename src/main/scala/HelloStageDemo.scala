@@ -8,33 +8,14 @@ import scalafx.scene.layout.{Background, HBox}
 import scalafx.scene.paint.Color._
 import scalafx.scene.paint._
 import scalafx.scene.text.Text
-scalafx.scene.layout.Background
+import scalafx.scene.layout.Background
 
 object HelloStageDemo extends JFXApp3 {
 
 
   override def start(): Unit = {
       stage = new  JFXApp3.PrimaryStage{
-        title = "Main Menu"
-        scene = new Scene{
-          fill = Color.rgb(26, 26, 26)
-          content = (List (new Text{
-            text="2hwagy"
-            style = "-fx-font: normal bold 60pt sans-serif"
-            layoutX = 50
-            layoutY = 100
-            fill = new LinearGradient(endX = 0  , stops = Stops(White, Grey))
-          }, new ListView(List("hello","Aloo")){
-            layoutY = 500
-            layoutX = 500
 
-          }))
-
-
-
-        }
-        height = 1000
-        width = 1500
       }
   }
 

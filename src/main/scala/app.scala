@@ -40,6 +40,7 @@ object app extends JFXApp3 {
       r.height = CELLWIDTH
 
       r.fill = if (x(i)(j) == 'x') Red else if (x(i)(j) == 'o') Green else Black;
+
       lst = lst .:: (r)
     }
     lst
