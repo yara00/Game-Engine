@@ -29,6 +29,16 @@ class Checkers {
   }
 
   def controller(move: String, state: State, turn: Int): State = {
+    /**
+     *
+     * 1. validateInput
+     * 2. parseInput
+     * 3. checkPermittedMoves
+     * 4. updateState
+     *
+     * returns updatedState to be passed to the drawer function
+     */
+      
     val xf = move.charAt(0).asDigit
     val yf = move.charAt(1).asDigit
     val xt = move.charAt(2).asDigit
@@ -37,7 +47,7 @@ class Checkers {
     val board = state.state
     if(turn == 0){
       // moving a wrong piece (white) or from null pos
-      if(board(xf)(yf) != "b") state.flag = false;
+      if(board(xf)(yf) != "b" && board(xf)(yf) != "kb") state.flag = false;
       else if(board(xf)(yf) != "kb") {
           // diagonal movement and to pos is occupied by an opponent/null check
         if((xt - xf == (yt - yf).abs) && board(xt)(yt) != "b" && board(xt)(yt) != "kb") {
@@ -50,7 +60,8 @@ class Checkers {
             if (board(xt + xt - xf)(yt + yt - yf) != "-") board(xt)(yt) = "b"
             else if (board(xt + xt - xf)(yt + yt - yf) == "-") { // jump case
               board(xt)(yt) = "-"
-              board(xt + xt - xf)(yt + yt - yf) = "b"
+              if(xt +xt - xf == 8) board(xt + xt - xf)(yt + yt - yf) = "kb"
+              else board(xt + xt - xf)(yt + yt - yf) = "b"
             }
           }
           else board(xt)(yt) = "b" // normal move
@@ -74,9 +85,10 @@ class Checkers {
         }
       }
     }
+      /**** player white turn ***/
     else {
       // moving a wrong piece (block) or from null pos
-      if(board(xf)(yf) != "w") state.flag = false;
+      if(board(xf)(yf) != "w" && board(xf)(yf) != "kw") state.flag = false;
       else if(board(xf)(yf) != "kw") {
         // diagonal movement and to pos is occupied by an opponent/null check
         if((xf - xt == (yt - yf).abs) && board(xt)(yt) != "w" && board(xt)(yt) != "kw") {
@@ -89,7 +101,8 @@ class Checkers {
             if (board(xt + xt - xf)(yt + yt - yf) != "-") board(xt)(yt) = "w"
             else if (board(xt + xt - xf)(yt + yt - yf) == "-") { // jump case
               board(xt)(yt) = "-"
-              board(xt + xt - xf)(yt + yt - yf) = "w"
+              if(xt + xt - xf == 1) board(xt + xt - xf)(yt + yt - yf) = "kw"
+              else board(xt + xt - xf)(yt + yt - yf) = "w"
             }
           }
           else board(xt)(yt) = "w" // normal move
@@ -125,8 +138,9 @@ object Main2 {
     var checkers : Checkers = new Checkers;
   //  checkers.parseInput("lolo")
     var turn = 1;
-    var state : State = new State;
+    var state : State = new State(9, 9);
     state = checkers.initState(state);
+   // state.state(8)(3) = "kb"
     while(true) {
       turn = turn ^ 1
       state.printState()
