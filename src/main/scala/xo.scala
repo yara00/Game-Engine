@@ -6,8 +6,9 @@ import scalafx.scene.shape.Rectangle
 import scalafx.scene.text.Text
 
 object xo {
-  val xo_BOARDWIDTH = 400;
-  val xo_initial: state = Array.fill(3,3)(" ")
+  val xo_BOARDWIDTH = 600;
+//  val xo_initial: state = Array.fill(3,3)(" ")
+  def xo_initial = Array.fill(3,3)(" ")
   val xo_controller: controller = (x: state, in: input, turn: turn) => {
     val getSymbol = (turn: turn) => {
       (turn%2) match {
