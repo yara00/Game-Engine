@@ -17,6 +17,9 @@ class ChessController {
   }
 
 
+
+
+
   def validBishopMove(index:Array[Int],state: State): Boolean ={
     if(Math.abs(index(3)-index(1)) == Math.abs(index(2)-index(0)))
       clearBishopWay(index,state)
