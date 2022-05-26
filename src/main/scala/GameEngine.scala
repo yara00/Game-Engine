@@ -1,3 +1,4 @@
+import definitions.BOARDWIDTH
 import scalafx.application.JFXApp3
 import scalafx.event._
 import scalafx.scene._
@@ -6,17 +7,16 @@ import scalafx.scene.image._
 import scalafx.scene.layout._
 import scalafx.scene.paint.Color._
 import scalafx.scene.text.Text
-import xo.{xo_drawer, xo_initial}
+import xo.{xo_drawer, Xo_initial}
 
 
 object GameEngine extends JFXApp3{
   var turnFirst:Boolean=true;
   override def start(): Unit = {
     stage = new JFXApp3.PrimaryStage{
-        scene = new Scene(500,500){
+        scene = new Scene(BOARDWIDTH,BOARDWIDTH){
             fill=Grey
             title="GameBuddy"
-
             val xoICON= getIconXO()
             val c4ICON= getIconConnect4()
             val chICON= getIconChess()
@@ -28,7 +28,7 @@ object GameEngine extends JFXApp3{
             val buttonCk=new Button("",ckICON)
 
             buttonX.onAction= (e:Any) => {
-              content = xo_drawer(xo_initial)
+
             }
 
             buttonC4.onAction= (e:Any) => {

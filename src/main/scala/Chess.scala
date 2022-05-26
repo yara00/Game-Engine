@@ -1,3 +1,4 @@
+import definitions.{controller, drawer, input, state, turn}
 import scalafx.application.JFXApp3
 import scalafx.geometry.Insets
 import scalafx.scene.text._
@@ -13,7 +14,34 @@ import scalafx.scene.shape.Rectangle
 import scala.::
 import scala.jdk.CollectionConverters._
 import scala.language.postfixOps
+
 object Chess extends JFXApp3{
+//  val Chess_drawer:drawer=(state:state)=>{
+//    //... prepare a list of nodes from state...
+//    //... return the list
+//  }
+//  val Chess_controller:controller=(state,input,turn)=>{
+//    //input form: "x0 y0 x1 y1 "
+//    // (0,0) is the top left square of the board as it's shown in the scene
+//    // (0,7) is the bottom left square
+//
+//
+////      (0,0)--------- x increases ---------->
+////        |             |
+////        |             y
+////        |             |
+////        |-----x-----(x,y)
+////   y increases
+////        |
+////        |
+////       \ /
+//
+//    //validate the move from (x0,y0) to (x1,y1)
+//    // ... perform move or return Invalid
+//    // return:
+//    // (state:new state or [null or old state if invalid] (whatever u like), status:[check status in definitions in xo.scala], String:[a message to show on screen(not necessary)])
+//  }
+
   val board_Map = Map("a8" -> 0 , "a7" -> 1 , "a6" -> 2, "a5" -> 3, "a4" -> 4, "a3" -> 5, "a2" -> 6, "a1" -> 7,
     "b8" -> 8, "b7" -> 9, "b6" -> 10, "b5" -> 11    , "b4" -> 12  , "b3" -> 13  , "b2" -> 14  , "b1" -> 15,
     "c8" -> 16, "c7" -> 17, "c6" -> 18, "c5" -> 19    , "c4" -> 20  , "c3" -> 21  , "c2" -> 22  , "c1" -> 23,
@@ -25,6 +53,8 @@ object Chess extends JFXApp3{
   )
   var texts :List[Text]= List()
   var board: List[Rectangle] = List()
+  var pieces: List[ImageView] = List()
+
   override def start(): Unit = {
     stage = new JFXApp3.PrimaryStage {
       scene = new Scene(800, 800) {
@@ -35,10 +65,9 @@ object Chess extends JFXApp3{
 
         for( a <- 1 to 8){
           for( b <- 1 to 8){
-          val rect = Rectangle(0+(70*a),0+(70*b),70,70)
+          val rect = Rectangle(70*(a-1),70*(b-1),70,70)
             if(b%2==0) {
               if (a % 2 == 0) {
-
                 rect.setFill(Color.web("#f0d9b5"))
               }
               else {
@@ -56,19 +85,15 @@ object Chess extends JFXApp3{
                 }
               }
               rect.setId(a.toString+ b.toString)
-
               board = board.appended(rect)
               // content = board
 
           }
-
-
-           val c = letters(a)
+          val c = letters(a)
           val t = new Text(board(board.length-1).x.value+25  ,board(board.length-1).y.value +120,c)
           t.setStyle("-fx-font: 30 sans-serif;")
           t.setFill(Color.Black)
          texts= texts.appended(t)
-
         }
         val i =0;
         for( i <- 1 to 8) {
@@ -76,8 +101,6 @@ object Chess extends JFXApp3{
           n.setStyle("-fx-font: 30 sans-serif;")
           texts= texts.appended(n)
         }
-
-
         content =  board ::: texts ::: WhiteQ()
       }
     }
@@ -225,7 +248,4 @@ object Chess extends JFXApp3{
       pieces.appended(br2)  :::pieces.appended(br1) :::pieces.appended(bkn1):::pieces.appended(bkn2)
     pieces
   }
-
-
-
 }
