@@ -225,4 +225,7 @@ object Chess extends JFXApp3{
       pieces.appended(br2)  :::pieces.appended(br1) :::pieces.appended(bkn1):::pieces.appended(bkn2)
     pieces
   }
+
+
+
 }
