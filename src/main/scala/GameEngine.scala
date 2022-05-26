@@ -6,6 +6,7 @@ import scalafx.scene.image._
 import scalafx.scene.layout._
 import scalafx.scene.paint.Color._
 import scalafx.scene.text.Text
+import xo.{xo_drawer, xo_initial}
 
 
 object GameEngine extends JFXApp3{
@@ -27,7 +28,7 @@ object GameEngine extends JFXApp3{
             val buttonCk=new Button("",ckICON)
 
             buttonX.onAction= (e:Any) => {
-              println("XOOOOOO")
+              content = xo_drawer(xo_initial)
             }
 
             buttonC4.onAction= (e:Any) => {
