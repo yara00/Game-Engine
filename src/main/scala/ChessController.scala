@@ -114,19 +114,25 @@ def validKingMove(index:Array[Int]):Boolean = {
      false
   }
 
+
   def validPawnMove(index : Array[Int] , turn : Int, board : State) : Boolean ={
     if(turn == 0){      // white pawn
-      if(board.state(index(2))(index(3)).==(".") || board.state(index(2))(index(3)).==("-")) {  // eat
+
+      if(board.state(index(2))(index(3)) != "." && board.state(index(2))(index(3)) !="-") {  // eat
         if ((index(0)-index(2)==1) && (Math.abs(index(3)-index(1))==1) ){
+          println("eaaat white")
           true
         }else{
+          println("falseee eat")
           false
         }
       }else{      // move
-        if(index(0)==7){   // first move
+        if(index(0)==6){   // first move
           if((index(3)==index(1)) && ((index(0)-index(2))<=2)){
+            println("forward white")
             true
           }else{
+            println("falseee white")
             false
           }
         }else{
@@ -139,7 +145,7 @@ def validKingMove(index:Array[Int]):Boolean = {
 
       }
     }else{    // black pawn
-      if(board.state(index(2))(index(3)).==(".") || board.state(index(2))(index(3)).==("-")) {  // eat
+      if(board.state(index(2))(index(3)) !="." && board.state(index(2))(index(3))!= "-") {  // eat
         if ((index(2)-index(0)==1 ) && (Math.abs(index(3)-index(1))==1) ){
           true
         }else{
@@ -170,22 +176,53 @@ def validKingMove(index:Array[Int]):Boolean = {
       false
     }else
     if(turn==0){
-      if(board.state(index(0))(index(1)).>("a") && board.state(index(0))(index(1)).<("z")
-        && ((board.state(index(2))(index(3)).>("A")  && board.state(index(2))(index(3)).<("Z")) ||
-              board.state(index(2))(index(3)).==("-") ||  board.state(index(2))(index(3)).==(".")) ){
+      if(board.state(index(0))(index(1)) >"a" && board.state(index(0))(index(1))<"z"
+        && ((board.state(index(2))(index(3))>"A"  && board.state(index(2))(index(3))<"Z") ||
+              board.state(index(2))(index(3)) =="-" ||  board.state(index(2))(index(3)) ==".") ){
         true
       }else
       false
     }else{
-      if(board.state(index(0))(index(1)).>("A") && board.state(index(0))(index(1)).<("Z")
-        && ((board.state(index(2))(index(3)).>("a")  && board.state(index(2))(index(3)).<("z")) ||
-        board.state(index(2))(index(3)).==("-") ||  board.state(index(2))(index(3)).==(".")) ){
+      if(board.state(index(0))(index(1))>"A" && board.state(index(0))(index(1))<"Z"
+        && ((board.state(index(2))(index(3))>"a"  && board.state(index(2))(index(3)) <"z") ||
+        board.state(index(2))(index(3))=="-" ||  board.state(index(2))(index(3))==".") ){
         true
       }else
         false
     }
   }
 
+  def moveValidation (index : Array[Int] , turn : Int ,board :State ) : Boolean ={
+    println(board.state(index(0))(index(1)))
+    if(board.state(index(0))(index(1)) == "P" || board.state(index(0))(index(1)) == "p"){
+      validPawnMove(index,turn,board)
+    }else if(board.state(index(0))(index(1)) == "R" || board.state(index(0))(index(1)) == "r"){
+      validRookMove(index,board)
+    }else if(board.state(index(0))(index(1)) == "K" || board.state(index(0))(index(1)) == "k"){
+      validKingMove(index)
+    }else if(board.state(index(0))(index(1)) == "N" || board.state(index(0))(index(1)) == "n"){
+      validKnightMove(index)
+    }else if(board.state(index(0))(index(1)) == "Q" || board.state(index(0))(index(1)) == "q"){
+      validQueenMove(index,board)
+    }else if(board.state(index(0))(index(1)) == "B" || board.state(index(0))(index(1)) == "b"){
+      validBishopMove(index,board)
+    }else{
+      false
+    }
+
+  }
+
+  def moveGenerate (index : Array[Int] , state : State) : State = {
+    println("movveeeee")
+    state.state(index(2))(index(3)) = state.state(index(0))(index(1))
+
+    if((index(0) + index(1)) % 2 ==0){
+      state.state(index(0)) (index(1)) = "-"
+    }else{
+      state.state(index(0)) (index(1)) = "."
+    }
+    state
+  }
   def validInput(move: String) : Boolean = {
     if(move.length!=4){
       return false
@@ -247,6 +284,16 @@ def validKingMove(index:Array[Int]):Boolean = {
 
        println(index(0) + " " + index(1) + " " + index(2) + " " + index(3))
 
+       println(generalValidation(index,turn,state))
+       println(moveValidation(index,turn,state))
+       if(generalValidation(index,turn,state) && moveValidation(index,turn,state)){
+         println("validatiiiion done")
+         moveGenerate(index,state)
+       }else{
+         println("not valide")
+         state.flag = false
+       }
+
 
      }
 
@@ -262,9 +309,11 @@ object MainChess{
    var state : State = new State(8, 8);
     state = chess.intialState()
 
-    while(true) {
-      turn = turn ^ 1
-     state.printState()
+    while(true ) {
+      if(state.flag){
+        turn = turn ^ 1
+      }
+      state.printState()
       println("Please enter -from- and -to- pos: ");
       val move = scala.io.StdIn.readLine()
       chess.controller(move, state, turn)
