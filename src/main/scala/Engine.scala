@@ -58,11 +58,11 @@ object Engine extends JFXApp3 {
     buttonCk.onAction= (e:Any) => {
       println("Checkerss")
     }
-    val menuH1 = new HBox(50,buttonX,buttonCh)
-    val menuH2 = new HBox(50,buttonC4,buttonCk)
-    val menuAll = new VBox(50,menuH1,menuH2)
-    menuAll.layoutX = 150
-    menuAll.layoutY = 300
+    val menuH1 = new HBox(25,buttonX,buttonCh)
+    val menuH2 = new HBox(25,buttonC4,buttonCk)
+    val menuAll = new VBox(25,menuH1,menuH2)
+    menuAll.layoutX = 165
+    menuAll.layoutY = 275
     sfxGroup2jfx(R).getChildren.add(menuAll)
     content = R
   }
