@@ -1,4 +1,3 @@
 # Default ignored files
 /null
-*.sbt
-build.sbt
+.idea/misc.xml

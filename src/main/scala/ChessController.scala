@@ -16,12 +16,49 @@ class ChessController {
     state
   }
 
+  def validQueenMove (index : Array[Int],state: State) : Boolean ={
+    validRookMove(index,state) || validBishopMove(index,state)
+  }
+
+  def validRookMove (index : Array[Int],state: State) : Boolean = {
+    if((index(0)==index(2) && index(1)!=index(3)) || (index(0)!=index(2) && index(1)==index(3))){
+      clearRookWay(index,state)
+    }else
+      false
+  }
+
+  def clearRookWay(index:Array[Int],state: State):Boolean = {
+    var deltaX:Int = 0
+    var deltaY:Int = 0
+    def setDeltas(dx:Int,dy:Int):Unit = (dx,dy) match {
+      case (dx:Int,0) if dx>0 =>
+        deltaX=1
+      case (dx:Int,0) if dx<0 =>
+        deltaX=1
+      case (0,dy:Int) if dy>0 =>
+        deltaY= 1
+      case (0,dy:Int) if dy<0 =>
+        deltaY = -1
+      case (0,0) => println("failed to match")
+    }
+    setDeltas(index(3)-index(1) , index(2)-index(0))
+    var startX=index(1)+deltaX
+    var startY=index(0)+deltaY
+    while( startY<index(2) && startX<index(3) && !hasObsticale(startX,startY,state)){
+      startY+=deltaY
+      startX+=deltaX
+    }
+    startY==index(2) && startX==index(3)
+  }
+
+
 
   def validBishopMove(index:Array[Int],state: State): Boolean ={
     if(Math.abs(index(3)-index(1)) == Math.abs(index(2)-index(0)))
       clearBishopWay(index,state)
     else false
   }
+
 
   def clearBishopWay(index:Array[Int],state: State):Boolean = {
     var deltaX:Int = 0;
@@ -54,13 +91,20 @@ class ChessController {
       startX+=deltaX
     }
 
-    startY==index(2) && startX<index(3)
+    startY==index(2) && startX==index(3)
   }
 
   def inBounds(x:Int,y:Int):Boolean = x<8 && x>=0 && y<8 && y>=0
   def hasObsticale(x:Int,y:Int,state: State):Boolean = state.state(y)(x) != "-" && state.state(y)(x) != "."
 
 
+
+def validKingMove(index:Array[Int]):Boolean = {
+  if(Math.abs(index(3)-index(1))<=1 && Math.abs(index(2)-index(0))<=1){
+    true
+  }else
+    false
+}
 
   def validKnightMove(index:Array[Int]): Boolean ={
     if((Math.abs(index(3)-index(1))==1 && Math.abs(index(2)-index(0))==2) ||
@@ -70,8 +114,61 @@ class ChessController {
      false
   }
 
+  def validPawnMove(index : Array[Int] , turn : Int, board : State) : Boolean ={
+    if(turn == 0){      // white pawn
+      if(board.state(index(2))(index(3)).==(".") || board.state(index(2))(index(3)).==("-")) {  // eat
+        if ((index(0)-index(2)==1) && (Math.abs(index(3)-index(1))==1) ){
+          true
+        }else{
+          false
+        }
+      }else{      // move
+        if(index(0)==7){   // first move
+          if((index(3)==index(1)) && ((index(0)-index(2))<=2)){
+            true
+          }else{
+            false
+          }
+        }else{
+          if((index(3)==index(1)) && (index(0)-index(2)==1)){   // move
+            true
+          }else{
+            false
+          }
+        }
+
+      }
+    }else{    // black pawn
+      if(board.state(index(2))(index(3)).==(".") || board.state(index(2))(index(3)).==("-")) {  // eat
+        if ((index(2)-index(0)==1 ) && (Math.abs(index(3)-index(1))==1) ){
+          true
+        }else{
+          false
+        }
+      }else{    // move
+        if(index(0) == 1){
+          if((index(3)==index(1)) && ((index(2)-index(0))<=2)){
+            true
+          }else{
+            false
+          }
+        }else{
+          if((index(3)==index(1)) && (index(2)-index(0)==1)){
+            true
+          }else{
+            false
+          }
+        }
+
+      }
+
+    }
+  }
   // validate that it's my piece and going to an enemy piece or empty place
   def generalValidation(index : Array[Int] , turn : Int , board: State) : Boolean ={
+    if(index(0) == index(2) && index(1) == index(3)){
+      false
+    }else
     if(turn==0){
       if(board.state(index(0))(index(1)).>("a") && board.state(index(0))(index(1)).<("z")
         && ((board.state(index(2))(index(3)).>("A")  && board.state(index(2))(index(3)).<("Z")) ||
@@ -149,6 +246,8 @@ class ChessController {
 
 
        println(index(0) + " " + index(1) + " " + index(2) + " " + index(3))
+
+
      }
 
     state
