@@ -6,7 +6,7 @@ import scalafx.scene.shape.Rectangle
 import scalafx.scene.text.Text
 
 object xo {
-  val xo_BOARDWIDTH = 200;
+  val xo_BOARDWIDTH = 400;
   val xo_initial: state = Array.fill(3,3)(" ")
   val xo_controller: controller = (x: state, in: input, turn: turn) => {
     val getSymbol = (turn: turn) => {
@@ -21,9 +21,7 @@ object xo {
       //noinspection SpellCheckingInspection
       val colcount = Array.fill[Int](3)(0)
       //noinspection SpellCheckingInspection
-      val diagonalcount = Array.fill(2)(0)
-
-      new Array[Int](3)
+      val diagonalcount = Array.fill[Int](2)(0)
       var full = true
       for (row <- Range(0, 3)) {
         for (col <- Range(0, 3)) {
@@ -36,12 +34,13 @@ object xo {
             if(row == col){
               diagonalcount(0) += 1
             }
-            else if(row+col==2){
+            if((row+col)==2){
               diagonalcount(1) += 1
             }
           }
         }
       }
+      println("------> " + diagonalcount(1));
       if (rowcount.contains(3) || colcount.contains(3)||diagonalcount.contains(3)) {
         (turn%2) match {
           case 0 => status.Player_0_won
