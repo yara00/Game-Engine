@@ -27,7 +27,7 @@ object Engine extends JFXApp3 {
   var state: state = null;
   var turn: turn = 0;
   def MenuScene = new Scene(500,500){
-    fill=Grey
+    fill=getBackground()
     //        Engine.stage.title="GameBuddy"
     val xoICON= getIconXO()
     val c4ICON= getIconConnect4()
@@ -67,7 +67,11 @@ object Engine extends JFXApp3 {
     message.setStyle("-fx-font: 30 sans-serif;")
     content = List(menuAll,message)
   }
-
+  def getBackground(): ImageView ={
+    val img = new Image("file:assets/background.png",700,700,true,true)
+    val imageView = new ImageView(img)
+    imageView
+  }
 
   def getIconXO(): ImageView ={
     val img = new Image("file:assets/xo.png",100,100,false,true)
