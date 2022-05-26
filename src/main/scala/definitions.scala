@@ -2,7 +2,6 @@ import definitions.status.status
 import scalafx.scene.Node
 
 object definitions{
-  def BOARDWIDTH: Int = 600
   type input = String
   type turn = Int
   type state = Array[Array[String]]
