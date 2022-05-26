@@ -57,15 +57,12 @@ object Engine extends JFXApp3 {
     buttonCk.onAction= (e:Any) => {
       println("Checkerss")
     }
-    val menuH1 = new HBox(50,buttonX,buttonC4)
-    val menuH2 = new HBox(50,buttonCh,buttonCk)
+    val menuH1 = new HBox(50,buttonX,buttonCh)
+    val menuH2 = new HBox(50,buttonC4,buttonCk)
     val menuAll = new VBox(50,menuH1,menuH2)
     menuAll.layoutX = 100
     menuAll.layoutY = 100
-
-    val message = new Text(100,50," Choose a game:")
-    message.setStyle("-fx-font: 30 sans-serif;")
-    content = List(menuAll,message)
+    content = List(menuAll)
   }
   def getBackground(): ImageView ={
     val img = new Image("file:assets/background.png",700,700,true,true)
