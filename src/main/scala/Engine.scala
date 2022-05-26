@@ -77,10 +77,10 @@ object Engine extends JFXApp3 {
           val res = inputresult._2
           res match {
             case Invalid => System.out.println("INVALID");
-            case Player_0_turn => state = inputresult._1; turn += 1; drawState(drawer, state); println("hi")
-            case Player_1_turn => state = inputresult._1; turn += 1; drawState(drawer, state); println("hii")
-            case Player_0_won => System.out.println("X won");drawState(drawer, state);
-            case Player_1_won => System.out.println("O won");drawState(drawer, state);
+            case Player_0_turn => state = inputresult._1; turn += 1; drawState(drawer, state);
+            case Player_1_turn => state = inputresult._1; turn += 1; drawState(drawer, state);
+            case Player_0_won => println("X won");drawState(drawer, state);turn=0
+            case Player_1_won => println("O won");drawState(drawer, state);turn=1
             case Draw => System.out.println("Draw");drawState(drawer, state);
             case _ => System.out.println(s"UNHANDLED CASE!");
           }
