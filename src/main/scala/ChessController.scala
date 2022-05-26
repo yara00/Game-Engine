@@ -166,6 +166,9 @@ def validKingMove(index:Array[Int]):Boolean = {
   }
   // validate that it's my piece and going to an enemy piece or empty place
   def generalValidation(index : Array[Int] , turn : Int , board: State) : Boolean ={
+    if(index(0) == index(2) && index(1) == index(3)){
+      false
+    }else
     if(turn==0){
       if(board.state(index(0))(index(1)).>("a") && board.state(index(0))(index(1)).<("z")
         && ((board.state(index(2))(index(3)).>("A")  && board.state(index(2))(index(3)).<("Z")) ||
