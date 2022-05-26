@@ -25,6 +25,26 @@ class ChessController {
     }
      false
   }
+
+  // validate that it's my piece and going to an enemy piece or empty place
+  def generalValidation(index : Array[Int] , turn : Int , board: State) : Boolean ={
+    if(turn==0){
+      if(board.state(index(0))(index(1)).>("a") && board.state(index(0))(index(1)).<("z")
+        && ((board.state(index(2))(index(3)).>("A")  && board.state(index(2))(index(3)).<("Z")) ||
+              board.state(index(2))(index(3)).==("-") ||  board.state(index(2))(index(3)).==(".")) ){
+        true
+      }else
+      false
+    }else{
+      if(board.state(index(0))(index(1)).>("A") && board.state(index(0))(index(1)).<("Z")
+        && ((board.state(index(2))(index(3)).>("a")  && board.state(index(2))(index(3)).<("z")) ||
+        board.state(index(2))(index(3)).==("-") ||  board.state(index(2))(index(3)).==(".")) ){
+        true
+      }else
+        false
+    }
+  }
+
   def validInput(move: String) : Boolean = {
     if(move.length!=4){
       return false
@@ -71,6 +91,7 @@ class ChessController {
   def controller(move: String, state: State, turn: Int): State = {
     var index= new Array[Int](4);
     println(move)
+
 
     /*
     steps >> 1) validate input  "tmam an l7rka gwa al board w anha kmlaa"
