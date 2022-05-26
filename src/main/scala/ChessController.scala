@@ -23,8 +23,9 @@ class ChessController {
   def validRookMove (index : Array[Int],state: State) : Boolean = {
     if((index(0)==index(2) && index(1)!=index(3)) || (index(0)!=index(2) && index(1)==index(3))){
       clearRookWay(index,state)
-    }else
+    }else {
       false
+    }
   }
 
   def clearRookWay(index:Array[Int],state: State):Boolean = {
@@ -102,16 +103,18 @@ class ChessController {
 def validKingMove(index:Array[Int]):Boolean = {
   if(Math.abs(index(3)-index(1))<=1 && Math.abs(index(2)-index(0))<=1){
     true
-  }else
+  }else {
     false
+  }
 }
 
   def validKnightMove(index:Array[Int]): Boolean ={
     if((Math.abs(index(3)-index(1))==1 && Math.abs(index(2)-index(0))==2) ||
       (Math.abs(index(3)-index(1))==2 && Math.abs(index(2)-index(0))==1)){
       true
-    }else
+    }else {
      false
+    }
   }
 
 
@@ -239,10 +242,10 @@ def validKingMove(index:Array[Int]):Boolean = {
     val xto = move.charAt(2)
     val yto = move.charAt(3).asDigit
 
-    if(xfrom.<('A') || xfrom.>('H') || xto.<('A') || xto.>('H') || yfrom.<(1) || yfrom.>(8) || yto.<(1) || yto.>(8) ){
-          println("Out of index")
-          return false
-    }
+    if(xfrom.<('A') || xfrom.>('H') || xto.<('A') || xto.>('H') || yfrom.<(1) || yfrom.>(8) || yto.<(1) || yto.>(8) ) {
+      println("Out of index")
+     return false
+      }
     true
   }
 
@@ -270,7 +273,7 @@ def validKingMove(index:Array[Int]):Boolean = {
       case (2) => return 6
       case (1) => return 7
     }
-    x
+
   }
 
   def controller(move: String, state: State, turn: Int): State = {
@@ -296,6 +299,7 @@ def validKingMove(index:Array[Int]):Boolean = {
        if(generalValidation(index,turn,state) && moveValidation(index,turn,state)){
          println("validatiiiion done")
          moveGenerate(index,state)
+         state.flag = true
        }else{
          println("not valide")
          state.flag = false
@@ -320,6 +324,7 @@ object MainChess{
       if(state.flag){
         turn = turn ^ 1
       }
+      println(turn)
       state.printState()
       println("Please enter -from- and -to- pos: ");
       val move = scala.io.StdIn.readLine()
