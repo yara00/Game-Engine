@@ -70,7 +70,12 @@ class ChessController {
   def hasObsticale(x:Int,y:Int,state: State):Boolean = state.state(y)(x) != "-" && state.state(y)(x) != "."
 
 
-
+def validKingMove(index:Array[Int]):Boolean = {
+  if(Math.abs(index(3)-index(1))<=1 && Math.abs(index(2)-index(0))<=1){
+    true
+  }else
+    false
+}
 
   def validKnightMove(index:Array[Int]): Boolean ={
     if((Math.abs(index(3)-index(1))==1 && Math.abs(index(2)-index(0))==2) ||
@@ -88,12 +93,21 @@ class ChessController {
         }else{
           false
         }
-      }else{
-        if((index(3)==index(1)) && (index(0)-index(2)==1)){   // move
-          true
+      }else{      // move
+        if(index(0)==7){   // first move
+          if((index(3)==index(1)) && ((index(0)-index(2))<=2)){
+            true
+          }else{
+            false
+          }
         }else{
-          false
+          if((index(3)==index(1)) && (index(0)-index(2)==1)){   // move
+            true
+          }else{
+            false
+          }
         }
+
       }
     }else{    // black pawn
       if(board.state(index(2))(index(3)).==(".") || board.state(index(2))(index(3)).==("-")) {  // eat
@@ -102,12 +116,21 @@ class ChessController {
         }else{
           false
         }
-      }else{
-        if((index(3)==index(1)) && (index(2)-index(0)==1)){    // move
-          true
+      }else{    // move
+        if(index(0) == 1){
+          if((index(3)==index(1)) && ((index(2)-index(0))<=2)){
+            true
+          }else{
+            false
+          }
         }else{
-          false
+          if((index(3)==index(1)) && (index(2)-index(0)==1)){
+            true
+          }else{
+            false
+          }
         }
+
       }
 
     }
@@ -191,6 +214,8 @@ class ChessController {
 
 
        println(index(0) + " " + index(1) + " " + index(2) + " " + index(3))
+
+
      }
 
     state
