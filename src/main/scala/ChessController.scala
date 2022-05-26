@@ -44,19 +44,33 @@ class ChessController {
     }
   }
 
+  def convertIndexToIndex(x: Int) : Int ={
+    x match {
+      case (8) => return 0
+      case (7) => return 1
+      case (6) => return 2
+      case (5) => return 3
+      case (4) => return 4
+      case (3) => return 5
+      case (2) => return 6
+      case (1) => return 7
+    }
+    x
+  }
+
   def controller(move: String, state: State, turn: Int): State = {
     var index= new Array[Int](4);
-
-
+    println(move)
     /*
     steps >> 1) validate input  "tmam an l7rka gwa al board w anha kmlaa"
              2) valiate move
      */
      if(validInput(move)){
-       index(0) = convertCharacterToIndex(move(0))
-       index(1) = move(1).asDigit
-       index(2) = convertCharacterToIndex(move(2))
-       index(3) = move(3).asDigit
+       index(0) = convertIndexToIndex(move(1).asDigit)
+       index(1) = convertCharacterToIndex(move(0))
+       index(2) = convertIndexToIndex(move(3).asDigit)
+       index(3) = convertCharacterToIndex(move(2))
+
 
        println(index(0) + " " + index(1) + " " + index(2) + " " + index(3))
      }
@@ -72,7 +86,7 @@ object MainChess{
     var turn = 1;
    var state : State = new State(8, 8);
     state = chess.intialState()
-    state.printState()
+
     while(true) {
       turn = turn ^ 1
      state.printState()
