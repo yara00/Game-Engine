@@ -1,6 +1,6 @@
 import definitions.{controller, drawer, state}
 
-object Checkers {
+object Connect4 {
 //  val Connect4_drawer:drawer=(state:state)=>{
 //    //... prepare a list of nodes (Node could ) from state...
 //    //... return the list
@@ -25,5 +25,4 @@ object Checkers {
 //    // ... perform move or return Invalid
 //    // return:
 //    // (state:new state or [null or old state if invalid] (whatever u like), status:[check status in definitions in xo.scala], String:[a message to show on screen(not necessary)])
-//  }
-//
+  }
