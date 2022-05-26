@@ -17,6 +17,13 @@ class ChessController {
   }
 
 
+  def validRookMove (index : Array[Int]) : Boolean = {
+    if((index(0)==index(2) && index(1)!=index(3)) || (index(0)!=index(2) && index(1)==index(3))){
+      true
+    }else
+      false
+  }
+
 
   def validKnightMove(index:Array[Int]): Boolean ={
     if((Math.abs(index(3)-index(1))==1 && Math.abs(index(2)-index(0))==2) ||
@@ -26,6 +33,38 @@ class ChessController {
      false
   }
 
+  def validPawnMove(index : Array[Int] , turn : Int, board : State) : Boolean ={
+    if(turn == 0){      // white pawn
+      if(board.state(index(2))(index(3)).==(".") || board.state(index(2))(index(3)).==("-")) {  // eat
+        if ((index(0)-index(2)==1) && (Math.abs(index(3)-index(1))==1) ){
+          true
+        }else{
+          false
+        }
+      }else{
+        if((index(3)==index(1)) && (index(0)-index(2)==1)){   // move
+          true
+        }else{
+          false
+        }
+      }
+    }else{    // black pawn
+      if(board.state(index(2))(index(3)).==(".") || board.state(index(2))(index(3)).==("-")) {  // eat
+        if ((index(2)-index(0)==1 ) && (Math.abs(index(3)-index(1))==1) ){
+          true
+        }else{
+          false
+        }
+      }else{
+        if((index(3)==index(1)) && (index(2)-index(0)==1)){    // move
+          true
+        }else{
+          false
+        }
+      }
+
+    }
+  }
   // validate that it's my piece and going to an enemy piece or empty place
   def generalValidation(index : Array[Int] , turn : Int , board: State) : Boolean ={
     if(turn==0){
