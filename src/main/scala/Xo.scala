@@ -33,17 +33,18 @@ object definitions{
     val Player_1_won: status.Value = Value("Second Player Won")
     val Draw: status.Value = Value("Draw")
   }
-  def BOARD_WIDTH: Int = 600
+  def BOARDWIDTH: Int = 600
   type input = String
   type turn = Int
   type state = Array[Array[Char]]
   type drawable = List[Node]
   type drawer = state =>drawable
   type controller = (state,input,turn)=>(state,status,String)
+
 }
 object xo {
-  val xo_initial: state = Array.fill(3,3)(' ')
-  val xo_controller: controller = (x: state, in: input, turn: turn) => {
+  val Xo_initial: state = Array.fill(3,3)(' ')
+  val Xo_controller: controller = (x: state, in: input, turn: turn) => {
     val getSymbol = (turn: turn) => {
       turn%2 match {
         case 0 => 'x'
@@ -102,7 +103,7 @@ object xo {
   }
   val xo_drawer:drawer=
     (x:state)=>{
-    val CELLWIDTH = BOARD_WIDTH / 3
+    val CELLWIDTH = BOARDWIDTH / 3
     var lst: List[Node]= List()
     var t_lst:List[Node] = List()
     for{
@@ -123,15 +124,10 @@ object xo {
         center_x=center_x- CELLWIDTH/40
       val gap = CELLWIDTH/5
       val t = new Text(x = center_x-CELLWIDTH/2+gap/2, y = center_y+CELLWIDTH/2-gap/2, t = text)
-
       t.fill = if (x(i)(j)=='x') Red else if (x(i)(j)=='o') Blue else White
       t.stroke = Black
       t.style =  s"-fx-font:normal ${CELLWIDTH-gap}pt ariel"
-      //      val t = new Text {
-      //        text= if (x(i)(j)=='X') "X" else if (x(i)(j)=='o') "O" else "";
-      //        style = s"-fx-font:normal bold ${CELLWIDTH}px sans-serif"
-      //        fill=
-      //      }
+
       lst = lst .:: (r)
       t_lst = t_lst .:: (t)
     }
@@ -140,7 +136,7 @@ object xo {
   }
 }
 
-object Xo extends JFXApp3 {
+object GameEngine extends JFXApp3 {
   override def start(): Unit = {
     stage = new JFXApp3.PrimaryStage {
       title = "ScalaFX Hello World"
@@ -148,11 +144,11 @@ object Xo extends JFXApp3 {
         //game dependent values:
         var dim: Array[Int] = Array.fill(2)(3);
         val signalingClickCount = 1 // 2 for chess ..
-        val controller: controller = xo_controller
+        val controller: controller = Xo_controller
         val drawer: drawer = xo_drawer
 
         //initial value for state is game dep. too
-        var state: state = xo_initial
+        var state: state = Xo_initial
 
         //vars and vals who do not care
         var ROOT = new Group();
@@ -169,8 +165,8 @@ object Xo extends JFXApp3 {
         val clickcount = new IntegerProperty(this, "clickcount", 0);
 
         ROOT.onMousePressed = (ev) => {
-          val x = Math.floor(ev.getSceneX / (BOARD_WIDTH / dim(0)))
-          val y = Math.floor(ev.getSceneY / (BOARD_WIDTH / dim(1)))
+          val x = Math.floor(ev.getSceneX / (BOARDWIDTH / dim(0)))
+          val y = Math.floor(ev.getSceneY / (BOARDWIDTH / dim(1)))
           inputBuffer.value += (s"${x} ${y} ")
           clickcount.value +=1;
           if (clickcount.value == signalingClickCount) {
