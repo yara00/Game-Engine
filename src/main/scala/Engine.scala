@@ -26,8 +26,9 @@ object Engine extends JFXApp3 {
   //initial value for state is game dependent too
   var state: state = null;
   var turn: turn = 0;
-  def MenuScene = new Scene(500,500){
-    fill=getBackground()
+  def MenuScene = new Scene(600,600){
+    var R = new Group()
+    sfxGroup2jfx(R).getChildren.add(getBackground())
     //        Engine.stage.title="GameBuddy"
     val xoICON= getIconXO()
     val c4ICON= getIconConnect4()
@@ -60,12 +61,13 @@ object Engine extends JFXApp3 {
     val menuH1 = new HBox(50,buttonX,buttonCh)
     val menuH2 = new HBox(50,buttonC4,buttonCk)
     val menuAll = new VBox(50,menuH1,menuH2)
-    menuAll.layoutX = 100
-    menuAll.layoutY = 100
-    content = List(menuAll)
+    menuAll.layoutX = 150
+    menuAll.layoutY = 300
+    sfxGroup2jfx(R).getChildren.add(menuAll)
+    content = R
   }
   def getBackground(): ImageView ={
-    val img = new Image("file:assets/background.png",700,700,true,true)
+    val img = new Image("file:assets/background.png",600,600,true,true)
     val imageView = new ImageView(img)
     imageView
   }
