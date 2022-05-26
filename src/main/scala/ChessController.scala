@@ -15,6 +15,16 @@ class ChessController {
     state.flag=true
     state
   }
+
+
+
+  def validKnightMove(index:Array[Int]): Boolean ={
+    if((Math.abs(index(3)-index(1))==1 && Math.abs(index(2)-index(0))==2) ||
+      (Math.abs(index(3)-index(1))==2 && Math.abs(index(2)-index(0))==1)){
+      return true
+    }
+     false
+  }
   def validInput(move: String) : Boolean = {
     if(move.length!=4){
       return false
@@ -61,6 +71,7 @@ class ChessController {
   def controller(move: String, state: State, turn: Int): State = {
     var index= new Array[Int](4);
     println(move)
+
     /*
     steps >> 1) validate input  "tmam an l7rka gwa al board w anha kmlaa"
              2) valiate move
