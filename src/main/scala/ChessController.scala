@@ -17,12 +17,50 @@ class ChessController {
   }
 
 
+  def validBishopMove(index:Array[Int]): Boolean ={
+    if(Math.abs(index(3)-index(1)) == Math.abs(index(2)-index(0)))
+      true
+    else false
+  }
+
+  def clearBishopWay(index:Array[Int]):Boolean = {
+    var deltaX:Int = 0;
+    var deltaY:Int = 0
+
+    def setDeltas(dx:Int,dy:Int):Unit = (dx,dy) match {
+      case (dx:Int,dy:Int) if dx>0 && dy>0 =>
+        deltaY=1
+        deltaX=1
+      case (dx:Int,dy:Int) if dx>0 && dy<0 =>
+        deltaY= -1
+        deltaX=1
+      case (dx:Int,dy:Int) if dx<0 && dy>0 =>
+        deltaY=1
+        deltaX= -1
+      case (dx:Int,dy:Int) if dx<0 && dy<0 =>
+        deltaY = -1
+        deltaX = -1
+      case (0,0) => println("failed to match")
+    }
+
+    setDeltas(index(3)-index(1) , index(2)-index(0))
+
+    var startX=index(1)+deltaX
+    var startY=index(0)+deltaY
+
+//    while( inBounds(startX,startY) )// && no friend here)
+    return true //temporarily
+  }
+
+  def inBounds(x:Int,y:Int):Boolean = x<8 && x>=0 && y<8 && y>=0
+
+
 
   def validKnightMove(index:Array[Int]): Boolean ={
     if((Math.abs(index(3)-index(1))==1 && Math.abs(index(2)-index(0))==2) ||
       (Math.abs(index(3)-index(1))==2 && Math.abs(index(2)-index(0))==1)){
-      return true
-    }
+      true
+    }else
      false
   }
   def validInput(move: String) : Boolean = {
