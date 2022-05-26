@@ -179,16 +179,23 @@ def validKingMove(index:Array[Int]):Boolean = {
       if(board.state(index(0))(index(1)) >"a" && board.state(index(0))(index(1))<"z"
         && ((board.state(index(2))(index(3))>"A"  && board.state(index(2))(index(3))<"Z") ||
               board.state(index(2))(index(3)) =="-" ||  board.state(index(2))(index(3)) ==".") ){
+        println("trueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
         true
       }else
-      false
+        {
+          println("falseeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+          false
+        }
+
     }else{
       if(board.state(index(0))(index(1))>"A" && board.state(index(0))(index(1))<"Z"
         && ((board.state(index(2))(index(3))>"a"  && board.state(index(2))(index(3)) <"z") ||
         board.state(index(2))(index(3))=="-" ||  board.state(index(2))(index(3))==".") ){
         true
-      }else
+      }else {
+        println("falseeeeeeeeeee222222222222222222")
         false
+      }
     }
   }
 
