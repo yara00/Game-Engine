@@ -16,14 +16,41 @@ class ChessController {
     state
   }
 
+  def validQueenMove (index : Array[Int],state: State) : Boolean ={
+    validRookMove(index,state) || validBishopMove(index,state)
+  }
 
-
-  def validRookMove (index : Array[Int]) : Boolean = {
+  def validRookMove (index : Array[Int],state: State) : Boolean = {
     if((index(0)==index(2) && index(1)!=index(3)) || (index(0)!=index(2) && index(1)==index(3))){
-      true
+      clearRookWay(index,state)
     }else
       false
   }
+
+  def clearRookWay(index:Array[Int],state: State):Boolean = {
+    var deltaX:Int = 0
+    var deltaY:Int = 0
+    def setDeltas(dx:Int,dy:Int):Unit = (dx,dy) match {
+      case (dx:Int,0) if dx>0 =>
+        deltaX=1
+      case (dx:Int,0) if dx<0 =>
+        deltaX=1
+      case (0,dy:Int) if dy>0 =>
+        deltaY= 1
+      case (0,dy:Int) if dy<0 =>
+        deltaY = -1
+      case (0,0) => println("failed to match")
+    }
+    setDeltas(index(3)-index(1) , index(2)-index(0))
+    var startX=index(1)+deltaX
+    var startY=index(0)+deltaY
+    while( startY<index(2) && startX<index(3) && !hasObsticale(startX,startY,state)){
+      startY+=deltaY
+      startX+=deltaX
+    }
+    startY==index(2) && startX==index(3)
+  }
+
 
 
   def validBishopMove(index:Array[Int],state: State): Boolean ={
@@ -31,6 +58,7 @@ class ChessController {
       clearBishopWay(index,state)
     else false
   }
+
 
   def clearBishopWay(index:Array[Int],state: State):Boolean = {
     var deltaX:Int = 0;
@@ -68,9 +96,6 @@ class ChessController {
 
   def inBounds(x:Int,y:Int):Boolean = x<8 && x>=0 && y<8 && y>=0
   def hasObsticale(x:Int,y:Int,state: State):Boolean = state.state(y)(x) != "-" && state.state(y)(x) != "."
-
-
-
 
   def validKnightMove(index:Array[Int]): Boolean ={
     if((Math.abs(index(3)-index(1))==1 && Math.abs(index(2)-index(0))==2) ||
