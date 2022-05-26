@@ -6,10 +6,11 @@ import scalafx.scene.shape.Rectangle
 import scalafx.scene.text.Text
 
 object xo {
+  val xo_BOARDWIDTH = 400;
   val xo_initial: state = Array.fill(3,3)(" ")
   val xo_controller: controller = (x: state, in: input, turn: turn) => {
     val getSymbol = (turn: turn) => {
-      turn%2 match {
+      (turn%2) match {
         case 0 => "x"
         case 1 => "o"
       }
@@ -18,8 +19,9 @@ object xo {
       //noinspection SpellCheckingInspection
       val rowcount = Array.fill[Int](3)(0)
       //noinspection SpellCheckingInspection
-      val colcount = Array.fill[Int](3)(0);
-      new Array[Int](3)
+      val colcount = Array.fill[Int](3)(0)
+      //noinspection SpellCheckingInspection
+      val diagonalcount = Array.fill[Int](2)(0)
       var full = true
       for (row <- Range(0, 3)) {
         for (col <- Range(0, 3)) {
@@ -29,11 +31,18 @@ object xo {
           if (s(row)(col) == getSymbol(p)) {
             rowcount(row) += 1
             colcount(col) += 1
+            if(row == col){
+              diagonalcount(0) += 1
+            }
+            if((row+col)==2){
+              diagonalcount(1) += 1
+            }
           }
         }
       }
-      if (rowcount.contains(3) || colcount.contains(3)) {
-        turn%2 match {
+      println("------> " + diagonalcount(1));
+      if (rowcount.contains(3) || colcount.contains(3)||diagonalcount.contains(3)) {
+        (turn%2) match {
           case 0 => status.Player_0_won
           case 1 => status.Player_1_won
         }
@@ -48,24 +57,26 @@ object xo {
         }
       }
     }
-
     val sel = in.split(" ")
     println("in: "+in)
     println("sel:" +sel);
     val row = sel(0).toDouble.toInt
     val col = sel(1).toDouble.toInt
-    val player = getSymbol(turn)
-    val returned = (null, status.Invalid, "invalid square")
-    if (x(row)(col) != " ") {
-      returned
+    if(getStatus(x,turn)==status.Player_0_won||getStatus(x,turn)==status.Player_1_won){
+      (Array.fill(3,3)(" "),status.Player_0_turn,"new game");
     }
-    else {
-      x(row)(col)=player
-      (x, getStatus(x, turn), "Valid")
+    else{
+      val player = getSymbol(turn)
+      val returned = (null, status.Invalid, "invalid square")
+      if (x(row)(col) != " ") {
+        returned
+      }
+      else {
+        x(row)(col)=player
+        (x, getStatus(x, turn), "Valid")
+      }
     }
   }
-
-  val xo_BOARDWIDTH = 800;
 
   val xo_drawer:drawer=
     (x:state)=>{
