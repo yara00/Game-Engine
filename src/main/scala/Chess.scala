@@ -64,7 +64,7 @@ object Chess extends JFXApp3{
 
         for( a <- 1 to 8){
           for( b <- 1 to 8){
-          val rect = Rectangle(0+(70*a),0+(70*b),70,70)
+          val rect = Rectangle(70*(a-1),70*(b-1),70,70)
             if(b%2==0) {
               if (a % 2 == 0) {
 
