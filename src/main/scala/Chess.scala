@@ -16,31 +16,31 @@ import scala.jdk.CollectionConverters._
 import scala.language.postfixOps
 
 object Chess extends JFXApp3{
-  val Chess_drawer:drawer=(state:state)=>{
-    //... prepare a list of nodes from state...
-    //... return the list
-  }
-  val Chess_controller:controller=(state,input,turn)=>{
-    //input form: "x0 y0 x1 y1 "
-    // (0,0) is the top left square of the board as it's shown in the scene
-    // (0,7) is the bottom left square
-
-
-//      (0,0)--------- x increases ---------->
-//        |             |
-//        |             y
-//        |             |
-//        |-----x-----(x,y)
-//   y increases
-//        |
-//        |
-//       \ /
-
-    //validate the move from (x0,y0) to (x1,y1)
-    // ... perform move or return Invalid
-    // return:
-    // (state:new state or [null or old state if invalid] (whatever u like), status:[check status in definitions in xo.scala], String:[a message to show on screen(not necessary)])
-  }
+//  val Chess_drawer:drawer=(state:state)=>{
+//    //... prepare a list of nodes from state...
+//    //... return the list
+//  }
+//  val Chess_controller:controller=(state,input,turn)=>{
+//    //input form: "x0 y0 x1 y1 "
+//    // (0,0) is the top left square of the board as it's shown in the scene
+//    // (0,7) is the bottom left square
+//
+//
+////      (0,0)--------- x increases ---------->
+////        |             |
+////        |             y
+////        |             |
+////        |-----x-----(x,y)
+////   y increases
+////        |
+////        |
+////       \ /
+//
+//    //validate the move from (x0,y0) to (x1,y1)
+//    // ... perform move or return Invalid
+//    // return:
+//    // (state:new state or [null or old state if invalid] (whatever u like), status:[check status in definitions in xo.scala], String:[a message to show on screen(not necessary)])
+//  }
 
   val board_Map = Map("a8" -> 0 , "a7" -> 1 , "a6" -> 2, "a5" -> 3, "a4" -> 4, "a3" -> 5, "a2" -> 6, "a1" -> 7,
     "b8" -> 8, "b7" -> 9, "b6" -> 10, "b5" -> 11    , "b4" -> 12  , "b3" -> 13  , "b2" -> 14  , "b1" -> 15,
@@ -53,6 +53,7 @@ object Chess extends JFXApp3{
   )
   var texts :List[Text]= List()
   var board: List[Rectangle] = List()
+  var pieces: List[ImageView] = List()
 
   override def start(): Unit = {
     stage = new JFXApp3.PrimaryStage {
@@ -67,7 +68,6 @@ object Chess extends JFXApp3{
           val rect = Rectangle(70*(a-1),70*(b-1),70,70)
             if(b%2==0) {
               if (a % 2 == 0) {
-
                 rect.setFill(Color.web("#f0d9b5"))
               }
               else {
@@ -85,7 +85,6 @@ object Chess extends JFXApp3{
                 }
               }
               rect.setId(a.toString+ b.toString)
-
               board = board.appended(rect)
               // content = board
 
