@@ -40,7 +40,6 @@ object xo {
           }
         }
       }
-      println("------> " + diagonalcount(1));
       if (rowcount.contains(3) || colcount.contains(3)||diagonalcount.contains(3)) {
         (turn%2) match {
           case 0 => status.Player_0_won
@@ -58,8 +57,6 @@ object xo {
       }
     }
     val sel = in.split(" ")
-    println("in: "+in)
-    println("sel:" +sel);
     val row = sel(0).toDouble.toInt
     val col = sel(1).toDouble.toInt
     if(getStatus(x,turn)==status.Player_0_won||getStatus(x,turn)==status.Player_1_won){

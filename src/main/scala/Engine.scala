@@ -5,6 +5,8 @@ import scalafx.beans.property.{IntegerProperty, StringProperty}
 import scalafx.scene.Group.sfxGroup2jfx
 import scalafx.scene.control.Button
 import scalafx.scene.image.{Image, ImageView}
+import scalafx.scene.input.KeyCode
+import scalafx.scene.input.KeyCode.Escape
 import scalafx.scene.layout.{HBox, VBox}
 import scalafx.scene.paint.Color._
 import scalafx.scene.text.Text
@@ -24,6 +26,47 @@ object Engine extends JFXApp3 {
   //initial value for state is game dependent too
   var state: state = null;
   var turn: turn = 0;
+  def MenuScene = new Scene(500,500){
+    fill=Grey
+    //        Engine.stage.title="GameBuddy"
+    val xoICON= getIconXO()
+    val c4ICON= getIconConnect4()
+    val chICON= getIconChess()
+    val ckICON= getIconCheckers()
+
+    val buttonX=new Button("",xoICON)
+    val buttonC4=new Button("",c4ICON)
+    val buttonCh=new Button("",chICON)
+    val buttonCk=new Button("",ckICON)
+    buttonX.onAction= (e:Any) => {
+      drawer=xo_drawer
+      controller = xo_controller
+      dim = 3
+      BOARDWIDTH = xo_BOARDWIDTH
+      signalingClickCount = 1;
+      state = xo_initial
+      turn = 0;
+      Engine.stage.scene = generateGameScene();
+    }
+    buttonC4.onAction= (e:Any) => {
+      println("C444444444")
+    }
+    buttonCh.onAction= (e:Any) => {
+      println("Chesssss")
+    }
+    buttonCk.onAction= (e:Any) => {
+      println("Checkerss")
+    }
+    val menuH1 = new HBox(50,buttonX,buttonC4)
+    val menuH2 = new HBox(50,buttonCh,buttonCk)
+    val menuAll = new VBox(50,menuH1,menuH2)
+    menuAll.layoutX = 100
+    menuAll.layoutY = 100
+
+    val message = new Text(100,50," Choose a game:")
+    message.setStyle("-fx-font: 30 sans-serif;")
+    content = List(menuAll,message)
+  }
 
 
   def getIconXO(): ImageView ={
@@ -43,15 +86,12 @@ object Engine extends JFXApp3 {
     val imageView = new ImageView(img)
     imageView
   }
-
   def getIconChess(): ImageView ={
     val img = new Image("file:assets/chess.png",100,100,true,true)
     val imageView = new ImageView(img)
     imageView
   }
-
-
-  def generateGameScene = ()=>{
+  def generateGameScene:()=>Scene =()=>{
     new Scene(BOARDWIDTH,BOARDWIDTH) {
       //game dependent values:
       //vars and vals engine related
@@ -65,6 +105,13 @@ object Engine extends JFXApp3 {
       }
       val inputBuffer = new StringProperty("")
       val clickcount = new IntegerProperty(this, "clickcount", 0);
+
+      this.onKeyPressed = (key)=>{
+        key.getText match {
+          case ("m"|"M")=> stage.scene = MenuScene
+          case _=>println(key.getText +" pressed")
+        }
+      }
       ROOT.onMousePressed = (ev) => {
         val x = Math.floor(ev.getSceneX / (BOARDWIDTH / dim))
         val y = Math.floor(ev.getSceneY / (BOARDWIDTH / dim))
@@ -85,10 +132,7 @@ object Engine extends JFXApp3 {
             case _ => System.out.println(s"UNHANDLED CASE!");
           }
         };
-        else {
-          println(clickcount.value);
-        }
-        System.out.println(s"${x} ${y} ")
+//        System.out.println(s"${x} ${y} ")
       }
       drawState(drawer, state);
     }
@@ -96,48 +140,48 @@ object Engine extends JFXApp3 {
   override def start(): Unit = {
     stage = new JFXApp3.PrimaryStage {
       title = "ScalaFX Hello World"
-      val MenuScene = new Scene(500,500){
-          fill=Grey
-          title="GameBuddy"
-          val xoICON= getIconXO()
-          val c4ICON= getIconConnect4()
-          val chICON= getIconChess()
-          val ckICON= getIconCheckers()
-
-          val buttonX=new Button("",xoICON)
-          val buttonC4=new Button("",c4ICON)
-          val buttonCh=new Button("",chICON)
-          val buttonCk=new Button("",ckICON)
-        buttonX.onAction= (e:Any) => {
-            drawer=xo_drawer
-            controller = xo_controller
-            dim = 3
-            BOARDWIDTH = xo_BOARDWIDTH
-            signalingClickCount = 1;
-            state = xo_initial
-            turn = 0;
-            scene = generateGameScene();
-          }
-          buttonC4.onAction= (e:Any) => {
-            println("C444444444")
-          }
-          buttonCh.onAction= (e:Any) => {
-            println("Chesssss")
-          }
-          buttonCk.onAction= (e:Any) => {
-            println("Checkerss")
-          }
-          val menuH1 = new HBox(50,buttonX,buttonC4)
-          val menuH2 = new HBox(50,buttonCh,buttonCk)
-          val menuAll = new VBox(50,menuH1,menuH2)
-          menuAll.layoutX = 100
-          menuAll.layoutY = 100
-
-          val message = new Text(100,50," Choose a game:")
-          message.setStyle("-fx-font: 30 sans-serif;")
-          content = List(menuAll,message)
-        }
-        scene = MenuScene;
-      }
+//      val MenuScene = new Scene(500,500){
+//        fill=Grey
+////        Engine.stage.title="GameBuddy"
+//        val xoICON= getIconXO()
+//        val c4ICON= getIconConnect4()
+//        val chICON= getIconChess()
+//        val ckICON= getIconCheckers()
+//
+//        val buttonX=new Button("",xoICON)
+//        val buttonC4=new Button("",c4ICON)
+//        val buttonCh=new Button("",chICON)
+//        val buttonCk=new Button("",ckICON)
+//        buttonX.onAction= (e:Any) => {
+//          drawer=xo_drawer
+//          controller = xo_controller
+//          dim = 3
+//          BOARDWIDTH = xo_BOARDWIDTH
+//          signalingClickCount = 1;
+//          state = xo_initial
+//          turn = 0;
+//          Engine.stage.scene = generateGameScene();
+//        }
+//        buttonC4.onAction= (e:Any) => {
+//          println("C444444444")
+//        }
+//        buttonCh.onAction= (e:Any) => {
+//          println("Chesssss")
+//        }
+//        buttonCk.onAction= (e:Any) => {
+//          println("Checkerss")
+//        }
+//        val menuH1 = new HBox(50,buttonX,buttonC4)
+//        val menuH2 = new HBox(50,buttonCh,buttonCk)
+//        val menuAll = new VBox(50,menuH1,menuH2)
+//        menuAll.layoutX = 100
+//        menuAll.layoutY = 100
+//
+//        val message = new Text(100,50," Choose a game:")
+//        message.setStyle("-fx-font: 30 sans-serif;")
+//        content = List(menuAll,message)
+//      }
+      scene = MenuScene
     }
+  }
 }
