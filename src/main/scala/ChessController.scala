@@ -45,7 +45,7 @@ class ChessController {
     setDeltas(index(3)-index(1) , index(2)-index(0))
     var startX=index(1)+deltaX
     var startY=index(0)+deltaY
-    while( startY<index(2) && startX<index(3) && !hasObsticale(startX,startY,state)){
+    while( (startY!=index(2) || startX!=index(3)) && !hasObsticale(startX,startY,state)){
       startY+=deltaY
       startX+=deltaX
     }
@@ -87,7 +87,7 @@ class ChessController {
     var startY=index(0)+deltaY
 
 
-    while( startY<index(2) && startX<index(3) && !hasObsticale(startX,startY,state)){
+    while( startY!=index(2) && startX!=index(3) && !hasObsticale(startX,startY,state)){
       startY+=deltaY
       startX+=deltaX
     }
@@ -264,14 +264,14 @@ def validKingMove(index:Array[Int]):Boolean = {
 
   def convertIndexToIndex(x: Int) : Int ={
     x match {
-      case (8) => return 0
-      case (7) => return 1
-      case (6) => return 2
-      case (5) => return 3
-      case (4) => return 4
-      case (3) => return 5
-      case (2) => return 6
-      case (1) => return 7
+      case (8) =>  0
+      case (7) =>  1
+      case (6) =>  2
+      case (5) =>  3
+      case (4) =>  4
+      case (3) =>  5
+      case (2) =>  6
+      case (1) =>  7
     }
 
   }
