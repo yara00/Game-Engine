@@ -306,6 +306,8 @@ def validKingMove(index:Array[Int]):Boolean = {
        }
 
 
+     }else{
+       state.flag = false
      }
 
     state
