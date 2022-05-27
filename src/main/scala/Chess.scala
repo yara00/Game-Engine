@@ -27,6 +27,68 @@ object Chess extends JFXApp3{
     Array("r", "n", "b","q","k","b","n","r"),
   )
 
+  def promotedpiece (turn : Int) : String = {
+    println("Your pawn can be promoted choose a piece")
+    val piece = scala.io.StdIn.readLine()
+    println(piece)
+    if(turn == 0){
+      if(piece!="r" && piece!="q" && piece!="n" && piece!="b"){
+        println("not valid piece")
+        promotedpiece(turn)
+      }else{
+        piece
+      }
+    }else{
+      if(piece!="R" && piece!="Q" && piece!="N" && piece!="B"){
+        println("not valid piece")
+        promotedpiece(turn)
+      }else{
+        piece
+      }
+    }
+  }
+
+  def checkPromotion (turn : Int , board : state) : state = {
+    var y_pos = -1
+
+    if(turn == 0){      // white turn
+      for(i <- 0 until 8) {
+        if (board(0)(i) == "p") {
+          y_pos = i
+
+        }
+      }
+      println(y_pos)
+      if(y_pos != -1) {
+        //        println("Your pawn can be promoted choose a piece")
+        //        val piece = scala.io.StdIn.readLine()
+        val piece = promotedpiece(turn)
+        println("your piece is >> " + piece)
+        board(0)(y_pos) = piece
+      }
+      board
+    }else{        // black turn
+      for(i <- 0 until 8) {
+        if (board(7)(i) == "P") {
+          y_pos = i
+
+        }
+      }
+
+      println(y_pos)
+      if(y_pos != -1){
+        //        println("Your pawn can be promoted choose a piece")
+        //        val piece = scala.io.StdIn.readLine()
+        val piece = promotedpiece(turn)
+        println("your piece is >> " + piece)
+        board(7)(y_pos) = piece
+      }
+
+      board
+
+    }
+  }
+
   def validQueenMove (index : Array[Int],state: state) : Boolean ={
     validRookMove(index,state) || validBishopMove(index,state)
   }
@@ -296,6 +358,7 @@ object Chess extends JFXApp3{
       if(generalValidation(index,turn,state) && moveValidation(index,turn,state)){
         println("validatiiiion done")
         moveGenerate(index,state)
+        checkPromotion(turn,state)
         flag = true
       }else{
         println("not valid")
@@ -340,7 +403,7 @@ object Chess extends JFXApp3{
     "g8" -> 48, "g7" -> 49, "g6" -> 50, "g5" -> 51    , "g4" -> 52  , "g3" -> 53  , "g2" -> 54  , "g1" -> 55,
     "h8" -> 56, "h7" -> 57, "h6" -> 58, "h5" -> 59    , "h4" -> 60  , "h3" ->61   , "h2" -> 62  , "h1" -> 63,
   )
-  def pic_Map = Map("k"->new ImageView(WK),"K"->new ImageView(BK),"n"->new ImageView(BKn),"N"->new ImageView(Wkn))
+  def pic_Map = Map("k"->new ImageView(BK),"K"->new ImageView(BK),"n"->new ImageView(BKn),"N"->new ImageView(WKn))
   var texts :List[Text]= List()
   var board: List[Rectangle] = List()
   var pieces: List[ImageView] = List()
