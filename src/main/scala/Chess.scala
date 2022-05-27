@@ -1,4 +1,4 @@
-import definitions.{controller, drawer, input, state, turn}
+import definitions.{controller, drawer, input, state, status, turn}
 import scalafx.application.JFXApp3
 import scalafx.geometry.Insets
 import scalafx.scene.text._
@@ -16,31 +16,315 @@ import scala.jdk.CollectionConverters._
 import scala.language.postfixOps
 
 object Chess extends JFXApp3{
-//  val Chess_drawer:drawer=(state:state)=>{
-//    //... prepare a list of nodes from state...
-//    //... return the list
-//  }
-//  val Chess_controller:controller=(state,input,turn)=>{
-//    //input form: "x0 y0 x1 y1 "
-//    // (0,0) is the top left square of the board as it's shown in the scene
-//    // (0,7) is the bottom left square
-//
-//
-////      (0,0)--------- x increases ---------->
-////        |             |
-////        |             y
-////        |             |
-////        |-----x-----(x,y)
-////   y increases
-////        |
-////        |
-////       \ /
-//
-//    //validate the move from (x0,y0) to (x1,y1)
-//    // ... perform move or return Invalid
-//    // return:
-//    // (state:new state or [null or old state if invalid] (whatever u like), status:[check status in definitions in xo.scala], String:[a message to show on screen(not necessary)])
-//  }
+  def intialstate () : state = Array(
+    Array("R", "N", "B","Q","K","B","N","R"),
+    Array("P", "P", "P","P","P", "P", "P","P"),
+    Array("-",".","-",".","-",".","-","."),
+    Array(".","-",".","-",".","-",".","-"),
+    Array("-",".","-",".","-",".","-","."),
+    Array(".","-",".","-",".","-",".","-"),
+    Array("p", "p", "p","p","p", "p", "p","p"),
+    Array("r", "n", "b","q","k","b","n","r"),
+  )
+
+  def validQueenMove (index : Array[Int],state: state) : Boolean ={
+    validRookMove(index,state) || validBishopMove(index,state)
+  }
+  def validRookMove (index : Array[Int],state: state) : Boolean = {
+    if((index(0)==index(2) && index(1)!=index(3)) || (index(0)!=index(2) && index(1)==index(3))){
+      clearRookWay(index,state)
+    }else {
+      false
+    }
+  }
+  def clearRookWay(index:Array[Int],state: state):Boolean = {
+    var deltaX:Int = 0
+    var deltaY:Int = 0
+    def setDeltas(dx:Int,dy:Int):Unit = (dx,dy) match {
+      case (dx:Int,0) if dx>0 =>
+        deltaX=1
+      case (dx:Int,0) if dx<0 =>
+        deltaX= -1
+      case (0,dy:Int) if dy>0 =>
+        deltaY= 1
+      case (0,dy:Int) if dy<0 =>
+        deltaY = -1
+      case (0,0) => println("failed to match")
+    }
+    setDeltas(index(3)-index(1) , index(2)-index(0))
+    var startX=index(1)+deltaX
+    var startY=index(0)+deltaY
+    while( startY<index(2) && startX<index(3) && !hasObsticale(startX,startY,state)){
+      startY+=deltaY
+      startX+=deltaX
+    }
+    startY==index(2) && startX==index(3)
+  }
+  def validBishopMove(index:Array[Int],state: state): Boolean ={
+    if(Math.abs(index(3)-index(1)) == Math.abs(index(2)-index(0)))
+      clearBishopWay(index,state)
+    else false
+  }
+  def clearBishopWay(index:Array[Int],state: state):Boolean = {
+    var deltaX:Int = 0;
+    var deltaY:Int = 0
+
+    def setDeltas(dx:Int,dy:Int):Unit = (dx,dy) match {
+      case (dx:Int,dy:Int) if dx>0 && dy>0 =>
+        deltaY=1
+        deltaX=1
+      case (dx:Int,dy:Int) if dx>0 && dy<0 =>
+        deltaY= -1
+        deltaX=1
+      case (dx:Int,dy:Int) if dx<0 && dy>0 =>
+        deltaY=1
+        deltaX= -1
+      case (dx:Int,dy:Int) if dx<0 && dy<0 =>
+        deltaY = -1
+        deltaX = -1
+      case (0,0) => println("failed to match")
+    }
+
+    setDeltas(index(3)-index(1) , index(2)-index(0))
+
+    var startX=index(1)+deltaX
+    var startY=index(0)+deltaY
+
+
+    while( startY<index(2) && startX<index(3) && !hasObsticale(startX,startY,state)){
+      startY+=deltaY
+      startX+=deltaX
+    }
+
+    startY==index(2) && startX==index(3)
+  }
+  def inBounds(x:Int,y:Int):Boolean = x<8 && x>=0 && y<8 && y>=0
+  def hasObsticale(x:Int,y:Int,state: state):Boolean = state(y)(x) != "-" && state(y)(x) != "."
+  def validKingMove(index:Array[Int]):Boolean = {
+    if(Math.abs(index(3)-index(1))<=1 && Math.abs(index(2)-index(0))<=1){
+      true
+    }else {
+      false
+    }
+  }
+  def validKnightMove(index:Array[Int]): Boolean ={
+    if((Math.abs(index(3)-index(1))==1 && Math.abs(index(2)-index(0))==2) ||
+      (Math.abs(index(3)-index(1))==2 && Math.abs(index(2)-index(0))==1)){
+      true
+    }else {
+      false
+    }
+  }
+  def validPawnMove(index : Array[Int] , turn : Int, board : state) : Boolean ={
+    if(turn == 0){      // white pawn
+
+      if(board(index(2))(index(3)) != "." && board(index(2))(index(3)) !="-") {  // eat
+        if ((index(0)-index(2)==1) && (Math.abs(index(3)-index(1))==1) ){
+          println("eaaat white")
+          true
+        }else{
+          println("falseee eat")
+          false
+        }
+      }else{      // move
+        if(index(0)==6){   // first move
+          if((index(3)==index(1)) && ((index(0)-index(2))<=2)){
+            println("forward white")
+            true
+          }else{
+            println("falseee white")
+            false
+          }
+        }else{
+          if((index(3)==index(1)) && (index(0)-index(2)==1)){   // move
+            true
+          }else{
+            false
+          }
+        }
+
+      }
+    }else{    // black pawn
+      if(board(index(2))(index(3)) !="." && board(index(2))(index(3))!= "-") {  // eat
+        if ((index(2)-index(0)==1 ) && (Math.abs(index(3)-index(1))==1) ){
+          true
+        }else{
+          false
+        }
+      }else{    // move
+        if(index(0) == 1){
+          if((index(3)==index(1)) && ((index(2)-index(0))<=2)){
+            true
+          }else{
+            false
+          }
+        }else{
+          if((index(3)==index(1)) && (index(2)-index(0)==1)){
+            true
+          }else{
+            false
+          }
+        }
+
+      }
+
+    }
+  }
+  // validate that it's my piece and going to an enemy piece or empty place
+  def generalValidation(index : Array[Int] , turn : Int , board: state) : Boolean ={
+    if(index(0) == index(2) && index(1) == index(3)){
+      false
+    }else
+      if(turn==0){
+        if(board(index(0))(index(1)) >"a" && board(index(0))(index(1))<"z"
+          && ((board(index(2))(index(3))>"A"  && board(index(2))(index(3))<"Z") ||
+          board(index(2))(index(3)) =="-" ||  board(index(2))(index(3)) ==".") ){
+          println("trueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+          true
+        }else
+        {
+          println("falseeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+          false
+        }
+
+      }else{
+        if(board(index(0))(index(1))>"A" && board(index(0))(index(1))<"Z"
+          && ((board(index(2))(index(3))>"a"  && board(index(2))(index(3)) <"z") ||
+          board(index(2))(index(3))=="-" ||  board(index(2))(index(3))==".") ){
+          true
+        }else {
+          println("falseeeeeeeeeee222222222222222222")
+          false
+        }
+      }
+  }
+  def moveValidation (index : Array[Int] , turn : Int ,board :state ) : Boolean ={
+    println(board(index(0))(index(1)))
+    if(board(index(0))(index(1)) == "P" || board(index(0))(index(1)) == "p"){
+      validPawnMove(index,turn,board)
+    }else if(board(index(0))(index(1)) == "R" || board(index(0))(index(1)) == "r"){
+      validRookMove(index,board)
+    }else if(board(index(0))(index(1)) == "K" || board(index(0))(index(1)) == "k"){
+      validKingMove(index)
+    }else if(board(index(0))(index(1)) == "N" || board(index(0))(index(1)) == "n"){
+      validKnightMove(index)
+    }else if(board(index(0))(index(1)) == "Q" || board(index(0))(index(1)) == "q"){
+      validQueenMove(index,board)
+    }else if(board(index(0))(index(1)) == "B" || board(index(0))(index(1)) == "b"){
+      validBishopMove(index,board)
+    }else{
+      false
+    }
+
+  }
+  def moveGenerate (index : Array[Int] , state : state) : state = {
+    println("movveeeee")
+    state(index(2))(index(3)) = state(index(0))(index(1))
+
+    if((index(0) + index(1)) % 2 ==0){
+      state(index(0)) (index(1)) = "-"
+    }else{
+      state(index(0)) (index(1)) = "."
+    }
+    state
+  }
+  def validInput(move: String) : Boolean = {
+    if(move.length!=4){
+      return false
+    }
+    val xfrom = move.charAt(0)
+    val yfrom = move.charAt(1).asDigit
+    val xto = move.charAt(2)
+    val yto = move.charAt(3).asDigit
+
+    if(xfrom.<('A') || xfrom.>('H') || xto.<('A') || xto.>('H') || yfrom.<(1) || yfrom.>(8) || yto.<(1) || yto.>(8) ) {
+      println("Out of index")
+      return false
+    }
+    true
+  }
+  def convertCharacterToIndex(x: Char) : Int ={
+    x match {
+      case ('A') => return 0
+      case ('B') => return 1
+      case ('C') => return 2
+      case ('D') => return 3
+      case ('E') => return 4
+      case ('F') => return 5
+      case ('G') => return 6
+      case ('H') => return 7
+    }
+  }
+  def convertIndexToIndex(x: Int) : Int ={
+    x match {
+      case (8) => return 0
+      case (7) => return 1
+      case (6) => return 2
+      case (5) => return 3
+      case (4) => return 4
+      case (3) => return 5
+      case (2) => return 6
+      case (1) => return 7
+    }
+
+  }
+  val chess_controller:controller = ( state: state,move: String, turn: Int)=> {
+    var index= new Array[Int](4);
+    println(move)
+    var flag :Boolean=false;
+
+    /*
+    steps >> 1) validate input  "tmam an l7rka gwa al board w anha kmlaa"
+             2) valiate move
+     */
+    if(validInput(move)){
+      index(0) = convertIndexToIndex(move(1).asDigit)
+      index(1) = convertCharacterToIndex(move(0))
+      index(2) = convertIndexToIndex(move(3).asDigit)
+      index(3) = convertCharacterToIndex(move(2))
+
+
+      println(index(0) + " " + index(1) + " " + index(2) + " " + index(3))
+
+      println(generalValidation(index,turn,state))
+      println(moveValidation(index,turn,state))
+      if(generalValidation(index,turn,state) && moveValidation(index,turn,state)){
+        println("validatiiiion done")
+        moveGenerate(index,state)
+        flag = true
+      }else{
+        println("not valid")
+        flag = false
+      }
+
+
+    }else{
+      flag = false
+    }
+
+    (state,if(flag) if(turn%2==0)status.Player_1_turn else status.Player_0_turn else status.Invalid,if(!flag) "Invalid move" else "")
+  }
+
+  val WK = new Image("file:assets/wk.png", 70, 70, false, false)
+  val WQ = new Image("file:assets/wq.png", 60, 60, true, false)
+  val WB = new Image("file:assets/wb.png", 70, 70, true, false)
+  val WKn = new Image("file:assets/wkn.png", 60, 60, false, false)
+  val WR = new Image("file:assets/wr.png", 60, 60, false, false)
+  val WP = new Image("file:assets/wp.png", 50, 50, true, false)
+  //  val WP3 = new Image("file:assets/wq.png",70,70,false,false)
+  //  val WP4 = new Image("file:assets/wq.png",70,70,false,false)
+  //  val WP5 = new Image("file:assets/wq.png",70,70,false,false)
+  //  val WP6 = new Image("file:assets/wq.png",70,70,false,false)
+  //  val WP7 = new Image("file:assets/wq.png",70,70,false,false)
+  //  val WP8 = new Image("file:assets/wq.png",70,70,false,false)
+
+
+  val BQ = new Image("file:assets/bq.png",  58, 58, false, false)
+  val BK = new Image("file:assets/bk.png",  55, 55, true, false)
+  val BB = new Image("file:assets/bb.png",  50, 50, true, false)
+  val BKn = new Image("file:assets/bkn.png", 60, 60, false, false)
+  val BR = new Image("file:assets/br.png",  60, 60, false, false)
+  val BP = new Image("file:assets/bp.png",  60, 60, true, false)
 
   val board_Map = Map("a8" -> 0 , "a7" -> 1 , "a6" -> 2, "a5" -> 3, "a4" -> 4, "a3" -> 5, "a2" -> 6, "a1" -> 7,
     "b8" -> 8, "b7" -> 9, "b6" -> 10, "b5" -> 11    , "b4" -> 12  , "b3" -> 13  , "b2" -> 14  , "b1" -> 15,
@@ -51,6 +335,7 @@ object Chess extends JFXApp3{
     "g8" -> 48, "g7" -> 49, "g6" -> 50, "g5" -> 51    , "g4" -> 52  , "g3" -> 53  , "g2" -> 54  , "g1" -> 55,
     "h8" -> 56, "h7" -> 57, "h6" -> 58, "h5" -> 59    , "h4" -> 60  , "h3" ->61   , "h2" -> 62  , "h1" -> 63,
   )
+  def pic_Map = Map("k"->new ImageView(BK),"K"->new ImageView(BK),"n"->new ImageView(BN),"N"->new ImageView(WN))
   var texts :List[Text]= List()
   var board: List[Rectangle] = List()
   var pieces: List[ImageView] = List()
@@ -58,11 +343,9 @@ object Chess extends JFXApp3{
   override def start(): Unit = {
     stage = new JFXApp3.PrimaryStage {
       scene = new Scene(800, 800) {
-
         fill = Grey
         var a = 0;
         var b = 0;
-
         for( a <- 1 to 8){
           for( b <- 1 to 8){
           val rect = Rectangle(70*(a-1),70*(b-1),70,70)
@@ -119,26 +402,6 @@ object Chess extends JFXApp3{
   }
   def WhiteQ(): List[ImageView] = {
     var pieces: List[ImageView] = List()
-    val WK = new Image("file:assets/wk.png", 70, 70, false, false)
-    val WQ = new Image("file:assets/wq.png", 60, 60, true, false)
-    val WB = new Image("file:assets/wb.png", 70, 70, true, false)
-    val WKn = new Image("file:assets/wkn.png", 60, 60, false, false)
-    val WR = new Image("file:assets/wr.png", 60, 60, false, false)
-    val WP = new Image("file:assets/wp.png", 50, 50, true, false)
-    //  val WP3 = new Image("file:assets/wq.png",70,70,false,false)
-    //  val WP4 = new Image("file:assets/wq.png",70,70,false,false)
-    //  val WP5 = new Image("file:assets/wq.png",70,70,false,false)
-    //  val WP6 = new Image("file:assets/wq.png",70,70,false,false)
-    //  val WP7 = new Image("file:assets/wq.png",70,70,false,false)
-    //  val WP8 = new Image("file:assets/wq.png",70,70,false,false)
-
-
-    val BQ = new Image("file:assets/bq.png",  58, 58, false, false)
-    val BK = new Image("file:assets/bk.png",  55, 55, true, false)
-    val BB = new Image("file:assets/bb.png",  50, 50, true, false)
-    val BKn = new Image("file:assets/bkn.png", 60, 60, false, false)
-    val BR = new Image("file:assets/br.png",  60, 60, false, false)
-    val BP = new Image("file:assets/bp.png",  60, 60, true, false)
 
 
     val wk = new ImageView(WK)

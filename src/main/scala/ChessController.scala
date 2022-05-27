@@ -390,21 +390,5 @@ def validKingMove(index:Array[Int]):Boolean = {
   }
 
 object MainChess{
-  def main(args: Array[String]): Unit = {
-    var chess : ChessController = new ChessController;
-    var turn = 1;
-   var state : State = new State(8, 8);
-    state = chess.intialState()
 
-    while(true ) {
-      if(state.flag){
-        turn = turn ^ 1
-      }
-      println(turn)
-      state.printState()
-      println("Please enter -from- and -to- pos: ");
-      val move = scala.io.StdIn.readLine()
-      chess.controller(move, state, turn)
-    }
-  }
 }

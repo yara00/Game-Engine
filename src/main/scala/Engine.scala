@@ -68,7 +68,7 @@ object Engine extends JFXApp3 {
     sfxGroup2jfx(R).getChildren.add(menuAll)
     content = R
     this.onKeyPressed = (key)=>{
-      if(key.getCode.getCode==27){
+      if(key.getCode==27){
         exit()
       }
     }
@@ -141,11 +141,11 @@ object Engine extends JFXApp3 {
           processInput(t.getText())
           t.clear()
         }
-        else if(key.getCode.getCode==27){
+        else if(key.getCode==27){
           stage.scene = MenuScene
         }
         else {
-          println(key.getCode.getCode+": unhandled")
+          println(key.getCode+": unhandled")
         }
       }
       ROOT.onMousePressed = (ev) => {
