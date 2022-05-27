@@ -336,9 +336,10 @@ object Chess extends JFXApp3{
     }
 
   }
+
   val chess_drawer:drawer =  (x:state)=>{
     var lst: List[Node]= List()
-    lst = lst.appended(board) ::: texts
+    lst = draw_board()
     for (row <- Range(0, 7)) {
       for (col <- Range(0, 7)) {
         if(x(row)(col)!="." && x(row)(col)!="-" )
@@ -487,7 +488,7 @@ object Chess extends JFXApp3{
 
     (state,if(flag) if(turn%2==0)status.Player_1_turn else status.Player_0_turn else status.Invalid,if(!flag) "Invalid move" else "")
   }
-
+/*
   val WK = new Image("file:assets/wk.png", 70, 70, false, false)
   val WQ = new Image("file:assets/wq.png", 60, 60, true, false)
   val WB = new Image("file:assets/wb.png", 70, 70, true, false)
@@ -508,64 +509,62 @@ object Chess extends JFXApp3{
   val BKn = new Image("file:assets/bkn.png", 60, 60, false, false)
   val BR = new Image("file:assets/br.png",  60, 60, false, false)
   val BP = new Image("file:assets/bp.png",  60, 60, true, false)
+*/
 
-  val board_Map = Map("a8" -> 0 , "a7" -> 1 , "a6" -> 2, "a5" -> 3, "a4" -> 4, "a3" -> 5, "a2" -> 6, "a1" -> 7,
-    "b8" -> 8, "b7" -> 9, "b6" -> 10, "b5" -> 11    , "b4" -> 12  , "b3" -> 13  , "b2" -> 14  , "b1" -> 15,
-    "c8" -> 16, "c7" -> 17, "c6" -> 18, "c5" -> 19    , "c4" -> 20  , "c3" -> 21  , "c2" -> 22  , "c1" -> 23,
-    "d8" -> 24, "d7" -> 25, "d6" -> 26, "d5" -> 27    , "d4" -> 28  , "d3" -> 29  , "d2" -> 30  , "d1" -> 31,
-    "e8" -> 32, "e7" -> 33, "e6" -> 34, "e5" -> 35   , "e4" -> 36  , "e3" -> 37  , "e2" -> 38  , "e1" -> 39,
-    "f8" -> 40, "f7" -> 41, "f6" -> 42, "f5" -> 43    , "f4" -> 44  , "f3" -> 45 , "f2" -> 46  , "f1" -> 47,
-    "g8" -> 48, "g7" -> 49, "g6" -> 50, "g5" -> 51    , "g4" -> 52  , "g3" -> 53  , "g2" -> 54  , "g1" -> 55,
-    "h8" -> 56, "h7" -> 57, "h6" -> 58, "h5" -> 59    , "h4" -> 60  , "h3" ->61   , "h2" -> 62  , "h1" -> 63,
-  )
   var texts :List[Text]= List()
   var board: List[Rectangle] = List()
   var pieces: List[ImageView] = List()
 
+  def draw_board(): List[Node]={
+    var lst: List[Node]= List()
+    var a = 0;
+    var b = 0;
+    for( a <- 1 to 8){
+      for( b <- 1 to 8){
+        val rect = Rectangle(70*(a-1),70*(b-1),70,70)
+        if(b%2==0) {
+          if (a % 2 == 0) {
+            rect.setFill(Color.web("#f0d9b5"))
+          }
+          else {
+            rect.setFill(Color.web("#b58863"))
+          }
+        }
+        else
+        {
+          if (a % 2 == 0) {
+            rect.setFill(Color.web("#b58863"))
+          }
+          else {
+            rect.setFill(Color.web("#f0d9b5"))
+
+          }
+        }
+        rect.setId(a.toString+ b.toString)
+        board = board.appended(rect)
+        // content = board
+
+      }
+      val c = letters(a)
+      val t = new Text(board(board.length-1).x.value+25  ,board(board.length-1).y.value +120,c)
+      t.setStyle("-fx-font: 30 sans-serif;")
+      t.setFill(Color.Black)
+      texts= texts.appended(t)
+    }
+    val i =0;
+    for( i <- 1 to 8) {
+      val n = new Text( board((56+(i-1))).x.value + 120  ,board((56+(i-1))).y.value +45 ,(9-i).toString)
+      n.setStyle("-fx-font: 30 sans-serif;")
+      texts= texts.appended(n)
+    }
+    lst = board ::: texts
+    lst
+  }
   override def start(): Unit = {
     stage = new JFXApp3.PrimaryStage {
       scene = new Scene(800, 800) {
         fill = Grey
-        var a = 0;
-        var b = 0;
-        for( a <- 1 to 8){
-          for( b <- 1 to 8){
-          val rect = Rectangle(70*(a-1),70*(b-1),70,70)
-            if(b%2==0) {
-              if (a % 2 == 0) {
-                rect.setFill(Color.web("#f0d9b5"))
-              }
-              else {
-                rect.setFill(Color.web("#b58863"))
-              }
-            }
-            else
-              {
-                if (a % 2 == 0) {
-                  rect.setFill(Color.web("#b58863"))
-                }
-                else {
-                  rect.setFill(Color.web("#f0d9b5"))
 
-                }
-              }
-              rect.setId(a.toString+ b.toString)
-              board = board.appended(rect)
-              // content = board
-
-          }
-          val c = letters(a)
-          val t = new Text(board(board.length-1).x.value+25  ,board(board.length-1).y.value +120,c)
-          t.setStyle("-fx-font: 30 sans-serif;")
-          t.setFill(Color.Black)
-         texts= texts.appended(t)
-        }
-        val i =0;
-        for( i <- 1 to 8) {
-          val n = new Text( board((56+(i-1))).x.value + 120  ,board((56+(i-1))).y.value +45 ,(9-i).toString)
-          n.setStyle("-fx-font: 30 sans-serif;")
-          texts= texts.appended(n)
-        }
         content =  board ::: texts
       }
     }
@@ -582,6 +581,15 @@ object Chess extends JFXApp3{
       case 8  =>return "H"
     }
   }
+ /* val board_Map = Map("a8" -> 0 , "a7" -> 1 , "a6" -> 2, "a5" -> 3, "a4" -> 4, "a3" -> 5, "a2" -> 6, "a1" -> 7,
+    "b8" -> 8, "b7" -> 9, "b6" -> 10, "b5" -> 11    , "b4" -> 12  , "b3" -> 13  , "b2" -> 14  , "b1" -> 15,
+    "c8" -> 16, "c7" -> 17, "c6" -> 18, "c5" -> 19    , "c4" -> 20  , "c3" -> 21  , "c2" -> 22  , "c1" -> 23,
+    "d8" -> 24, "d7" -> 25, "d6" -> 26, "d5" -> 27    , "d4" -> 28  , "d3" -> 29  , "d2" -> 30  , "d1" -> 31,
+    "e8" -> 32, "e7" -> 33, "e6" -> 34, "e5" -> 35   , "e4" -> 36  , "e3" -> 37  , "e2" -> 38  , "e1" -> 39,
+    "f8" -> 40, "f7" -> 41, "f6" -> 42, "f5" -> 43    , "f4" -> 44  , "f3" -> 45 , "f2" -> 46  , "f1" -> 47,
+    "g8" -> 48, "g7" -> 49, "g6" -> 50, "g5" -> 51    , "g4" -> 52  , "g3" -> 53  , "g2" -> 54  , "g1" -> 55,
+    "h8" -> 56, "h7" -> 57, "h6" -> 58, "h5" -> 59    , "h4" -> 60  , "h3" ->61   , "h2" -> 62  , "h1" -> 63,
+  )
   def WhiteQ(): List[ImageView] = {
     var pieces: List[ImageView] = List()
 
@@ -692,5 +700,5 @@ object Chess extends JFXApp3{
           pieces.appended(wr2)  :::pieces.appended(wr1) :::pieces.appended(wkn1):::pieces.appended(wkn2) ::: pieces.appended(bk) ::: pieces.appended(bq)::: pieces.appended(bb1) ::: pieces.appended(bb2)  :::
       pieces.appended(br2)  :::pieces.appended(br1) :::pieces.appended(bkn1):::pieces.appended(bkn2)
     pieces
-  }
+  }*/
 }
