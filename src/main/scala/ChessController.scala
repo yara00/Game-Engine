@@ -23,9 +23,6 @@ class ChessController {
 
   def validRookMove (index : Array[Int],state: State) : Boolean = {
     if((index(0)==index(2) && index(1)!=index(3)) || (index(0)!=index(2) && index(1)==index(3))){
-      println("valid move for rook we will check the way >>")
-      println("the way >> " +  clearRookWay(index,state))
-
       clearRookWay(index,state)
     }else {
       false
@@ -49,7 +46,7 @@ class ChessController {
     setDeltas(index(3)-index(1) , index(2)-index(0))
     var startX=index(1)+deltaX
     var startY=index(0)+deltaY
-    while( startY<index(2) && startX<index(3) && !hasObsticale(startX,startY,state)){
+    while( (startY!=index(2) || startX!=index(3)) && !hasObsticale(startX,startY,state)){
       startY+=deltaY
       startX+=deltaX
     }
@@ -60,8 +57,6 @@ class ChessController {
 
   def validBishopMove(index:Array[Int],state: State): Boolean ={
     if(Math.abs(index(3)-index(1)) == Math.abs(index(2)-index(0))) {
-      println("valid move for bishop we will check the way >>")
-      println("the way >> " +  clearBishopWay(index,state))
       clearBishopWay(index,state)
     } else false
   }
@@ -93,7 +88,7 @@ class ChessController {
     var startY=index(0)+deltaY
 
 
-    while( startY<index(2) && startX<index(3) && !hasObsticale(startX,startY,state)){
+    while( startY!=index(2) && startX!=index(3) && !hasObsticale(startX,startY,state)){
       startY+=deltaY
       startX+=deltaX
     }
@@ -165,11 +160,9 @@ def validKingMove(index:Array[Int]):Boolean = {
         val piece = promotedpiece(turn)
         println("your piece is >> " + piece)
         board.state(0)(y_pos) = piece
-
       }
       board
     }else{        // black turn
-
       for(i <- 0 until 8) {
         if (board.state(7)(i) == "P") {
           y_pos = i

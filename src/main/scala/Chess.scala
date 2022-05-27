@@ -65,7 +65,8 @@ object Chess extends JFXApp3{
       clearBishopWay(index,state)
     else false
   }
-  def clearBishopWay(index:Array[Int],state: state):Boolean = {
+
+  def clearBishopWay(index:Array[Int],state: State):Boolean = {
     var deltaX:Int = 0;
     var deltaY:Int = 0
 
@@ -84,13 +85,9 @@ object Chess extends JFXApp3{
         deltaX = -1
       case (0,0) => println("failed to match")
     }
-
     setDeltas(index(3)-index(1) , index(2)-index(0))
-
     var startX=index(1)+deltaX
     var startY=index(0)+deltaY
-
-
     while( startY<index(2) && startX<index(3) && !hasObsticale(startX,startY,state)){
       startY+=deltaY
       startX+=deltaX
@@ -98,6 +95,7 @@ object Chess extends JFXApp3{
 
     startY==index(2) && startX==index(3)
   }
+
   def inBounds(x:Int,y:Int):Boolean = x<8 && x>=0 && y<8 && y>=0
   def hasObsticale(x:Int,y:Int,state: state):Boolean = state(y)(x) != "-" && state(y)(x) != "."
   def validKingMove(index:Array[Int]):Boolean = {
