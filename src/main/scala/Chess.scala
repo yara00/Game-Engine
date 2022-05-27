@@ -28,6 +28,68 @@ object Chess extends JFXApp3{
     Array("r", "n", "b","q","k","b","n","r"),
   )
 
+  def promotedpiece (turn : Int) : String = {
+    println("Your pawn can be promoted choose a piece")
+    val piece = scala.io.StdIn.readLine()
+    println(piece)
+    if(turn == 0){
+      if(piece!="r" && piece!="q" && piece!="n" && piece!="b"){
+        println("not valid piece")
+        promotedpiece(turn)
+      }else{
+        piece
+      }
+    }else{
+      if(piece!="R" && piece!="Q" && piece!="N" && piece!="B"){
+        println("not valid piece")
+        promotedpiece(turn)
+      }else{
+        piece
+      }
+    }
+  }
+
+  def checkPromotion (turn : Int , board : state) : state = {
+    var y_pos = -1
+
+    if(turn == 0){      // white turn
+      for(i <- 0 until 8) {
+        if (board(0)(i) == "p") {
+          y_pos = i
+
+        }
+      }
+      println(y_pos)
+      if(y_pos != -1) {
+        //        println("Your pawn can be promoted choose a piece")
+        //        val piece = scala.io.StdIn.readLine()
+        val piece = promotedpiece(turn)
+        println("your piece is >> " + piece)
+        board(0)(y_pos) = piece
+      }
+      board
+    }else{        // black turn
+      for(i <- 0 until 8) {
+        if (board(7)(i) == "P") {
+          y_pos = i
+
+        }
+      }
+
+      println(y_pos)
+      if(y_pos != -1){
+        //        println("Your pawn can be promoted choose a piece")
+        //        val piece = scala.io.StdIn.readLine()
+        val piece = promotedpiece(turn)
+        println("your piece is >> " + piece)
+        board(7)(y_pos) = piece
+      }
+
+      board
+
+    }
+  }
+
   def validQueenMove (index : Array[Int],state: state) : Boolean ={
     validRookMove(index,state) || validBishopMove(index,state)
   }
@@ -38,6 +100,7 @@ object Chess extends JFXApp3{
       false
     }
   }
+
   def clearRookWay(index:Array[Int],state: state):Boolean = {
     var deltaX:Int = 0
     var deltaY:Int = 0
@@ -55,19 +118,22 @@ object Chess extends JFXApp3{
     setDeltas(index(3)-index(1) , index(2)-index(0))
     var startX=index(1)+deltaX
     var startY=index(0)+deltaY
-    while( startY<index(2) && startX<index(3) && !hasObsticale(startX,startY,state)){
+    while( (startY!=index(2) || startX!=index(3)) && !hasObsticale(startX,startY,state)){
       startY+=deltaY
       startX+=deltaX
     }
     startY==index(2) && startX==index(3)
   }
+
+
+
   def validBishopMove(index:Array[Int],state: state): Boolean ={
-    if(Math.abs(index(3)-index(1)) == Math.abs(index(2)-index(0)))
+    if(Math.abs(index(3)-index(1)) == Math.abs(index(2)-index(0))) {
       clearBishopWay(index,state)
-    else false
+    } else false
   }
 
-  def clearBishopWay(index:Array[Int],state: State):Boolean = {
+  def clearBishopWay(index:Array[Int],state: state):Boolean = {
     var deltaX:Int = 0;
     var deltaY:Int = 0
 
@@ -86,17 +152,20 @@ object Chess extends JFXApp3{
         deltaX = -1
       case (0,0) => println("failed to match")
     }
+
     setDeltas(index(3)-index(1) , index(2)-index(0))
+
     var startX=index(1)+deltaX
     var startY=index(0)+deltaY
-    while( startY<index(2) && startX<index(3) && !hasObsticale(startX,startY,state)){
+
+
+    while( startY!=index(2) && startX!=index(3) && !hasObsticale(startX,startY,state)){
       startY+=deltaY
       startX+=deltaX
     }
 
     startY==index(2) && startX==index(3)
   }
-
   def inBounds(x:Int,y:Int):Boolean = x<8 && x>=0 && y<8 && y>=0
   def hasObsticale(x:Int,y:Int,state: state):Boolean = state(y)(x) != "-" && state(y)(x) != "."
   def validKingMove(index:Array[Int]):Boolean = {
@@ -404,6 +473,7 @@ object Chess extends JFXApp3{
       if(generalValidation(index,turn,state) && moveValidation(index,turn,state)){
         println("validatiiiion done")
         moveGenerate(index,state)
+        checkPromotion(turn,state)
         flag = true
       }else{
         println("not valid")

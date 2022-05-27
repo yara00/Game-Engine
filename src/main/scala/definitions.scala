@@ -13,7 +13,7 @@ object definitions{
     type status = Value
     //for move:
     val Invalid: status.Value = Value("Invalid")
-    //for game and turns:
+    //for game and turns
     //running
     val Player_0_turn: status.Value = Value("First Player's turn")
     val Player_1_turn: status.Value = Value("Second Player's turn")
