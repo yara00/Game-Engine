@@ -18,7 +18,7 @@ import scala.language.postfixOps
 
 object Engine extends JFXApp3 {
   var dim: Int=3;   //dimension (8 for chess, 3 for xo , ... )
-  var BOARDWIDTH:Int=800;
+  var BOARDWIDTH:Int=600;
   var signalingClickCount = 1       // default is 1
   var controller: controller = null
   var drawer: drawer = null
@@ -34,12 +34,7 @@ object Engine extends JFXApp3 {
     val c4ICON= getIconConnect4()
     val chICON= getIconChess()
     val ckICON= getIconCheckers()
-
-    val buttonX=new Button("",xoICON)
-    val buttonC4=new Button("",c4ICON)
-    val buttonCh=new Button("",chICON)
-    val buttonCk=new Button("",ckICON)
-    buttonX.onAction= (e:Any) => {
+    xoICON.onMousePressed = (e)=>{
       drawer=xo_drawer
       controller = xo_controller
       dim = 3
@@ -49,19 +44,21 @@ object Engine extends JFXApp3 {
       turn = 0;
       Engine.stage.scene = generateGameScene();
     }
-    buttonC4.onAction= (e:Any) => {
+
+
+    c4ICON.onMousePressed= (e:Any) => {
       println("C444444444")
     }
-    buttonCh.onAction= (e:Any) => {
+    chICON.onMousePressed= (e:Any) => {
       println("Chesssss")
     }
-    buttonCk.onAction= (e:Any) => {
+    ckICON.onMousePressed= (e:Any) => {
       println("Checkerss")
     }
-    val menuH1 = new HBox(25,buttonX,buttonCh)
-    val menuH2 = new HBox(25,buttonC4,buttonCk)
+    val menuH1 = new HBox(100,xoICON,chICON)
+    val menuH2 = new HBox(100,c4ICON,ckICON)
     val menuAll = new VBox(25,menuH1,menuH2)
-    menuAll.layoutX = 165
+    menuAll.layoutX = 150
     menuAll.layoutY = 275
     sfxGroup2jfx(R).getChildren.add(menuAll)
     content = R
