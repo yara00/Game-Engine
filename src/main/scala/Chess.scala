@@ -65,7 +65,8 @@ object Chess extends JFXApp3{
       clearBishopWay(index,state)
     else false
   }
-  def clearBishopWay(index:Array[Int],state: state):Boolean = {
+
+  def clearBishopWay(index:Array[Int],state: State):Boolean = {
     var deltaX:Int = 0;
     var deltaY:Int = 0
 
@@ -84,13 +85,9 @@ object Chess extends JFXApp3{
         deltaX = -1
       case (0,0) => println("failed to match")
     }
-
     setDeltas(index(3)-index(1) , index(2)-index(0))
-
     var startX=index(1)+deltaX
     var startY=index(0)+deltaY
-
-
     while( startY<index(2) && startX<index(3) && !hasObsticale(startX,startY,state)){
       startY+=deltaY
       startX+=deltaX
@@ -98,6 +95,7 @@ object Chess extends JFXApp3{
 
     startY==index(2) && startX==index(3)
   }
+
   def inBounds(x:Int,y:Int):Boolean = x<8 && x>=0 && y<8 && y>=0
   def hasObsticale(x:Int,y:Int,state: state):Boolean = state(y)(x) != "-" && state(y)(x) != "."
   def validKingMove(index:Array[Int]):Boolean = {
@@ -335,7 +333,7 @@ object Chess extends JFXApp3{
     "g8" -> 48, "g7" -> 49, "g6" -> 50, "g5" -> 51    , "g4" -> 52  , "g3" -> 53  , "g2" -> 54  , "g1" -> 55,
     "h8" -> 56, "h7" -> 57, "h6" -> 58, "h5" -> 59    , "h4" -> 60  , "h3" ->61   , "h2" -> 62  , "h1" -> 63,
   )
-  def pic_Map = Map("k"->new ImageView(BK),"K"->new ImageView(BK),"n"->new ImageView(BN),"N"->new ImageView(WN))
+  def pic_Map = Map("k"->new ImageView(BK),"K"->new ImageView(BK),"n"->new ImageView(BKn),"N"->new ImageView(Wkn))
   var texts :List[Text]= List()
   var board: List[Rectangle] = List()
   var pieces: List[ImageView] = List()
