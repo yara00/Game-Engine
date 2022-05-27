@@ -2,7 +2,7 @@ import definitions.{controller, drawer, input, state, status, turn}
 import scalafx.application.JFXApp3
 import scalafx.geometry.Insets
 import scalafx.scene.text._
-import scalafx.scene.Scene
+import scalafx.scene.{Node, Scene}
 import scalafx.scene.effect.DropShadow
 import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.input.{DragEvent, MouseEvent}
@@ -12,6 +12,7 @@ import scalafx.scene.paint._
 import scalafx.scene.shape.Rectangle
 
 import scala.::
+
 import scala.jdk.CollectionConverters._
 import scala.language.postfixOps
 
@@ -131,7 +132,6 @@ object Chess extends JFXApp3{
       clearBishopWay(index,state)
     } else false
   }
-
 
   def clearBishopWay(index:Array[Int],state: state):Boolean = {
     var deltaX:Int = 0;
@@ -336,6 +336,120 @@ object Chess extends JFXApp3{
     }
 
   }
+  val chess_drawer:drawer =  (x:state)=>{
+    var lst: List[Node]= List()
+    lst = lst.appended(board) ::: texts
+    for (row <- Range(0, 7)) {
+      for (col <- Range(0, 7)) {
+        if(x(row)(col)!="." && x(row)(col)!="-" )
+        lst = lst.appended(draw_piece(((8*row)+col),x(row)(col)))
+      }
+    }
+    lst
+  }
+
+  def draw_wk(n: Int): ImageView = {
+    val WK = new Image("file:assets/wk.png", 70, 70, false, false)
+    val wk = new ImageView(WK)
+    wk.setX(board(n).x.value)
+    wk.setY(board(n).y.value)
+    wk
+  }
+  def draw_wq(n: Int): ImageView = {
+    val WQ = new Image("file:assets/wq.png", 60, 60, true, false)
+    val wq = new ImageView(WQ)
+    wq.setX(board(n).x.value+5)
+    wq.setY(board(n).y.value+5)
+    wq
+  }
+  def draw_wr(n: Int): ImageView = {
+    val WR = new Image("file:assets/wr.png", 60, 60, false, false)
+    val wr = new ImageView(WR)
+    wr.setX(board(n).x.value+5)
+    wr.setY(board(n).y.value+5)
+    wr
+  }
+  def draw_wn(n: Int): ImageView = {
+    val WKn = new Image("file:assets/wkn.png", 60, 60, false, false)
+    val wkn = new ImageView(WKn)
+    wkn.setX(board(n).x.value+5)
+    wkn.setY(board(n).y.value+5)
+    wkn
+  }
+  def draw_wb(n: Int): ImageView = {
+    val WB = new Image("file:assets/wb.png", 70, 70, true, false)
+    val wb = new ImageView(WB)
+    wb.setX(board(n).x.value)
+    wb.setY(board(n).y.value)
+    wb
+  }
+  def draw_wp(n: Int): ImageView = {
+    val WP = new Image("file:assets/wp.png", 50, 50, true, false)
+    val wp = new ImageView(WP)
+    wp.setX(board(n).x.value+13)
+    wp.setY(board(n).y.value+10)
+    wp
+  }
+  ///
+  def draw_bk(n: Int): ImageView = {
+    val BK = new Image("file:assets/bk.png",  55, 55, true, false)
+    val bk = new ImageView(BK)
+    bk.setX(board(n).x.value+5)
+    bk.setY(board(n).y.value+5)
+    bk
+  }
+  def draw_bq(n: Int): ImageView = {
+    val BQ = new Image("file:assets/bq.png",  58, 58, false, false)
+    val bq = new ImageView(BQ)
+    bq.setX(board(n).x.value+5)
+    bq.setY(board(n).y.value+5)
+    bq
+  }
+  def draw_br(n: Int): ImageView = {
+    val BR = new Image("file:assets/br.png",  60, 60, false, false)
+    val br = new ImageView(BR)
+    br.setX(board(n).x.value+5)
+    br.setY(board(n).y.value+5)
+    br
+  }
+  def draw_bn(n: Int): ImageView = {
+    val BKn = new Image("file:assets/bkn.png", 60, 60, false, false)
+    val bkn = new ImageView(BKn)
+    bkn.setX(board(n).x.value+5)
+    bkn.setY(board(n).y.value+5)
+    bkn
+  }
+  def draw_bb(n: Int): ImageView = {
+    val BB = new Image("file:assets/bb.png",  50, 50, true, false)
+    val bb = new ImageView(BB)
+    bb.setX(board(n).x.value+9)
+    bb.setY(board(n).y.value+9)
+    bb
+  }
+  def draw_bp(n: Int): ImageView = {
+    val BP = new Image("file:assets/bp.png",  60, 60, true, false)
+    val bp = new ImageView(BP)
+    bp.setX(board(n).x.value+5)
+    bp.setY(board(n).y.value+5)
+    bp
+  }
+  def draw_piece(n:Int, s:String) : ImageView ={
+    s match {
+      case "k"  =>return draw_wk(n)
+      case "q"  =>return draw_wq(n)
+      case "r"  =>return draw_wr(n)
+      case "n"  =>return draw_wn(n)
+      case "b"  =>return draw_wb(n)
+      case "p"  =>return draw_wp(n)
+      case "K"  =>return draw_bk(n)
+      case "Q"  =>return draw_bq(n)
+      case "R"  =>return draw_br(n)
+      case "N"  =>return draw_bn(n)
+      case "B"  =>return draw_bb(n)
+      case "p"  =>return draw_bp(n)
+    }
+
+  }
   val chess_controller:controller = ( state: state,move: String, turn: Int)=> {
     var index= new Array[Int](4);
     println(move)
@@ -404,7 +518,6 @@ object Chess extends JFXApp3{
     "g8" -> 48, "g7" -> 49, "g6" -> 50, "g5" -> 51    , "g4" -> 52  , "g3" -> 53  , "g2" -> 54  , "g1" -> 55,
     "h8" -> 56, "h7" -> 57, "h6" -> 58, "h5" -> 59    , "h4" -> 60  , "h3" ->61   , "h2" -> 62  , "h1" -> 63,
   )
-  def pic_Map = Map("k"->new ImageView(BK),"K"->new ImageView(BK),"n"->new ImageView(BKn),"N"->new ImageView(WKn))
   var texts :List[Text]= List()
   var board: List[Rectangle] = List()
   var pieces: List[ImageView] = List()
@@ -453,7 +566,7 @@ object Chess extends JFXApp3{
           n.setStyle("-fx-font: 30 sans-serif;")
           texts= texts.appended(n)
         }
-        content =  board ::: texts ::: WhiteQ()
+        content =  board ::: texts
       }
     }
   }
