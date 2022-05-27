@@ -1,28 +1,33 @@
 import definitions._
 import definitions.status._
+import javafx.geometry.Insets
+import javafx.scene.layout.{Background, BackgroundFill, Border, BorderStroke, CornerRadii}
+import javafx.scene.paint.{Color, Paint}
 import scalafx.application.JFXApp3
 import scalafx.beans.property.{IntegerProperty, StringProperty}
 import scalafx.scene.Group.sfxGroup2jfx
-import scalafx.scene.control.Button
+import scalafx.scene.control.TextField.sfxTextField2jfx
+import scalafx.scene.control.{Button, TextField}
 import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.input.KeyCode
-import scalafx.scene.input.KeyCode.Escape
 import scalafx.scene.layout.{HBox, VBox}
 import scalafx.scene.paint.Color._
 import scalafx.scene.text.Text
 import scalafx.scene.{Group, Node, Scene}
 import xo._
 
+import java.awt.RenderingHints.Key
 import scala.language.postfixOps
+import scala.sys.exit
 
 
 object Engine extends JFXApp3 {
   var dim: Int=3;   //dimension (8 for chess, 3 for xo , ... )
   var BOARDWIDTH:Int=600;
+  val TEXTFIELDHEIGHT = 20
   var signalingClickCount = 1       // default is 1
   var controller: controller = null
   var drawer: drawer = null
-
   //initial value for state is game dependent too
   var state: state = null;
   var turn: turn = 0;
@@ -62,6 +67,11 @@ object Engine extends JFXApp3 {
     menuAll.layoutY = 275
     sfxGroup2jfx(R).getChildren.add(menuAll)
     content = R
+    this.onKeyPressed = (key)=>{
+      if(key.getCode.getCode==27){
+        exit()
+      }
+    }
   }
   def getBackground(): ImageView ={
     val img = new Image("file:assets/background.png",600,600,true,true)
@@ -91,12 +101,18 @@ object Engine extends JFXApp3 {
     val imageView = new ImageView(img)
     imageView
   }
+
   def generateGameScene:()=>Scene =()=>{
-    new Scene(BOARDWIDTH,BOARDWIDTH) {
+    new Scene(BOARDWIDTH,BOARDWIDTH+(TEXTFIELDHEIGHT+2)) {
       //game dependent values:
       //vars and vals engine related
+      val t = new TextField()
+      sfxTextField2jfx(t).setMinSize(BOARDWIDTH/dim,TEXTFIELDHEIGHT)
+      t.layoutY = BOARDWIDTH+1
+      t.layoutX = BOARDWIDTH-BOARDWIDTH/dim
+      sfxTextField2jfx(t).setBackground(new Background(new BackgroundFill(Color.color(0.3,0.2,0.2,0.3),CornerRadii.EMPTY,Insets.EMPTY)))
       var ROOT = new Group();
-      content = ROOT;
+      content = List(ROOT,t);
       val drawState = (drawer: drawer, state: state) => {
         sfxGroup2jfx(ROOT).getChildren.removeAll();
         (drawer(state)).foreach((x) => {
@@ -105,11 +121,31 @@ object Engine extends JFXApp3 {
       }
       val inputBuffer = new StringProperty("")
       val clickcount = new IntegerProperty(this, "clickcount", 0);
-
+      def processInput(in:String)={
+        clickcount.value = 0;
+        val inputresult = controller(state, in, turn);
+        inputBuffer.value = ""
+        val res = inputresult._2
+        res match {
+          case Invalid => System.out.println("INVALID");
+          case Player_0_turn => state = inputresult._1; turn += 1; drawState(drawer, state);
+          case Player_1_turn => state = inputresult._1; turn += 1; drawState(drawer, state);
+          case Player_0_won => println("X won");drawState(drawer, state);turn=0
+          case Player_1_won => println("O won");drawState(drawer, state);turn=1
+          case Draw => System.out.println("Draw");drawState(drawer, state);
+          case _ => System.out.println(s"UNHANDLED CASE!");
+        }
+      }
       this.onKeyPressed = (key)=>{
-        key.getText match {
-          case ("m"|"M")=> stage.scene = MenuScene
-          case _=>println(key.getText +" pressed")
+        if(key.getCode.isWhitespaceKey){
+          processInput(t.getText())
+          t.clear()
+        }
+        else if(key.getCode.getCode==27){
+          stage.scene = MenuScene
+        }
+        else {
+          println(key.getCode.getCode+": unhandled")
         }
       }
       ROOT.onMousePressed = (ev) => {
@@ -118,19 +154,7 @@ object Engine extends JFXApp3 {
         inputBuffer.value += (s"${x} ${y} ")
         clickcount.value +=1;
         if (clickcount.value == signalingClickCount) {
-          clickcount.value = 0;
-          val inputresult = controller(state, inputBuffer.value, turn);
-          inputBuffer.value = ""
-          val res = inputresult._2
-          res match {
-            case Invalid => System.out.println("INVALID");
-            case Player_0_turn => state = inputresult._1; turn += 1; drawState(drawer, state);
-            case Player_1_turn => state = inputresult._1; turn += 1; drawState(drawer, state);
-            case Player_0_won => println("X won");drawState(drawer, state);turn=0
-            case Player_1_won => println("O won");drawState(drawer, state);turn=1
-            case Draw => System.out.println("Draw");drawState(drawer, state);
-            case _ => System.out.println(s"UNHANDLED CASE!");
-          }
+          processInput(inputBuffer.value)
         };
 //        System.out.println(s"${x} ${y} ")
       }
@@ -140,48 +164,8 @@ object Engine extends JFXApp3 {
   override def start(): Unit = {
     stage = new JFXApp3.PrimaryStage {
       title = "ScalaFX Hello World"
-//      val MenuScene = new Scene(500,500){
-//        fill=Grey
-////        Engine.stage.title="GameBuddy"
-//        val xoICON= getIconXO()
-//        val c4ICON= getIconConnect4()
-//        val chICON= getIconChess()
-//        val ckICON= getIconCheckers()
-//
-//        val buttonX=new Button("",xoICON)
-//        val buttonC4=new Button("",c4ICON)
-//        val buttonCh=new Button("",chICON)
-//        val buttonCk=new Button("",ckICON)
-//        buttonX.onAction= (e:Any) => {
-//          drawer=xo_drawer
-//          controller = xo_controller
-//          dim = 3
-//          BOARDWIDTH = xo_BOARDWIDTH
-//          signalingClickCount = 1;
-//          state = xo_initial
-//          turn = 0;
-//          Engine.stage.scene = generateGameScene();
-//        }
-//        buttonC4.onAction= (e:Any) => {
-//          println("C444444444")
-//        }
-//        buttonCh.onAction= (e:Any) => {
-//          println("Chesssss")
-//        }
-//        buttonCk.onAction= (e:Any) => {
-//          println("Checkerss")
-//        }
-//        val menuH1 = new HBox(50,buttonX,buttonC4)
-//        val menuH2 = new HBox(50,buttonCh,buttonCk)
-//        val menuAll = new VBox(50,menuH1,menuH2)
-//        menuAll.layoutX = 100
-//        menuAll.layoutY = 100
-//
-//        val message = new Text(100,50," Choose a game:")
-//        message.setStyle("-fx-font: 30 sans-serif;")
-//        content = List(menuAll,message)
-//      }
       scene = MenuScene
     }
+    stage.setResizable(false)
   }
 }

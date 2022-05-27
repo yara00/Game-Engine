@@ -1,9 +1,12 @@
 import definitions.status.status
 import definitions.{controller, drawer, input, state, status, turn}
+import javafx.scene.shape.StrokeLineJoin
 import scalafx.scene.Node
 import scalafx.scene.paint.Color.{Black, Blue, Red, White}
 import scalafx.scene.shape.Rectangle
+import scalafx.scene.shape.Shape.sfxShape2jfx
 import scalafx.scene.text.Text
+import scalafx.scene.text.Text.sfxText2jfx
 
 object xo {
   val xo_BOARDWIDTH = 600;
@@ -58,20 +61,33 @@ object xo {
       }
     }
     val sel = in.split(" ")
-    val row = sel(0).toDouble.toInt
-    val col = sel(1).toDouble.toInt
-    if(getStatus(x,turn)==status.Player_0_won||getStatus(x,turn)==status.Player_1_won){
-      (Array.fill(3,3)(" "),status.Player_0_turn,"new game");
+    val returned = (null, status.Invalid, "invalid square")
+    var invalid:Boolean = false;
+    var row = 0;
+    var col = 0
+    try {
+      row = sel(0).toDouble.toInt
+      col = sel(1).toDouble.toInt
     }
-    else{
-      val player = getSymbol(turn)
-      val returned = (null, status.Invalid, "invalid square")
-      if (x(row)(col) != " ") {
-        returned
+    catch{
+      case e:Exception=> invalid = true;
+    }
+    if(invalid||row>2||col>2){
+      returned
+    }
+    else {
+      if (getStatus(x, turn) == status.Player_0_won || getStatus(x, turn) == status.Player_1_won|| getStatus(x, turn) == status.Draw) {
+        (xo_initial, status.Player_0_turn, "new game");
       }
       else {
-        x(row)(col)=player
-        (x, getStatus(x, turn), "Valid")
+        val player = getSymbol(turn)
+        if (x(row)(col) != " ") {
+          returned
+        }
+        else {
+          x(row)(col) = player
+          (x, getStatus(x, turn), "Valid")
+        }
       }
     }
   }
@@ -101,7 +117,12 @@ object xo {
         val t = new Text(x = center_x-CELLWIDTH/2+gap/2, y = center_y+CELLWIDTH/2-gap/2, t = text)
         t.fill = if (x(i)(j)=="x") Red else if (x(i)(j)=="o") Blue else White
         t.stroke = Black
+        sfxText2jfx(t).setStrokeWidth(6)
+        sfxText2jfx(t).setStrokeLineJoin(StrokeLineJoin.ROUND)
         t.style =  s"-fx-font:normal ${CELLWIDTH-gap}pt ariel"
+        sfxShape2jfx(t).setSmooth(true)
+        sfxShape2jfx(r).setStrokeWidth(4)
+        sfxShape2jfx(r).setSmooth(true)
 
         lst = lst .:: (r)
         t_lst = t_lst .:: (t)
