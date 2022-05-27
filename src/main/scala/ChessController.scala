@@ -35,7 +35,7 @@ class ChessController {
       case (dx:Int,0) if dx>0 =>
         deltaX=1
       case (dx:Int,0) if dx<0 =>
-        deltaX=1
+        deltaX= -1
       case (0,dy:Int) if dy>0 =>
         deltaY= 1
       case (0,dy:Int) if dy<0 =>
@@ -306,6 +306,8 @@ def validKingMove(index:Array[Int]):Boolean = {
        }
 
 
+     }else{
+       state.flag = false
      }
 
     state
