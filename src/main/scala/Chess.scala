@@ -34,20 +34,14 @@ object Chess{
     s"${X.toString}${Y}"
   }
   def promotedpiece (turn : Int , piece : String) : Boolean = {
-    println("Your pawn can be promoted choose a piece")
-
-    println(piece)
-    println(turn)
     if(turn == 0){
       if(piece!="r" && piece!="q" && piece!="n" && piece!="b"){
-        println("not valid piece")
         false
       }else{
         true
       }
     }else{
       if(piece!="R" && piece!="Q" && piece!="N" && piece!="B"){
-        println("not valid piece")
         false
       }else{
        true
@@ -75,7 +69,6 @@ object Chess{
   }
 
   def Promotion (turn : Int , board : state , piece : String) : state = {
-    println(" func promotion >>>")
     var y_pos = -1
 
     if(turn == 0){      // white turn
@@ -84,10 +77,8 @@ object Chess{
           y_pos = i
         }
       }
-      println(y_pos)
       if(y_pos != -1) {
        // val piece = promotedpiece(turn)
-        println("your piece is >> " + piece)
         board(0)(y_pos) = piece
       }
       board
@@ -98,11 +89,8 @@ object Chess{
 
         }
       }
-
-      println(y_pos)
       if(y_pos != -1){
        // val piece = promotedpiece(turn)
-        println("your piece is >> " + piece)
         board(7)(y_pos) = piece
       }
 
@@ -206,22 +194,17 @@ object Chess{
   }
   def validPawnMove(index : Array[Int] , turn : Int, board : state) : Boolean ={
     if(turn == 0){      // white pawn
-
       if(board(index(2))(index(3)) != "." && board(index(2))(index(3)) !="-") {  // eat
         if ((index(0)-index(2)==1) && (Math.abs(index(3)-index(1))==1) ){
-          println("eaaat white")
           true
         }else{
-          println("falseee eat")
           false
         }
       }else{      // move
         if(index(0)==6){   // first move
           if((index(3)==index(1)) && ((index(0)-index(2))<=2)){
-            println("forward white")
             true
           }else{
-            println("falseee white")
             false
           }
         }else{
@@ -268,11 +251,9 @@ object Chess{
         if(board(index(0))(index(1)) >"a" && board(index(0))(index(1))<"z"
           && ((board(index(2))(index(3))>"A"  && board(index(2))(index(3))<"Z") ||
           board(index(2))(index(3)) =="-" ||  board(index(2))(index(3)) ==".") ){
-          println("trueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
           true
         }else
         {
-          println("falseeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
           false
         }
 
@@ -282,13 +263,41 @@ object Chess{
           board(index(2))(index(3))=="-" ||  board(index(2))(index(3))==".") ){
           true
         }else {
-          println("falseeeeeeeeeee222222222222222222")
           false
         }
       }
   }
+
+  def isMyKingInDanger(board:state,turn:turn):Boolean={
+    var kingPosx = 0
+    var kingPosy = 0
+    var indanger = false;
+    val isOpponent:(String)=>Boolean = (x:String)=> if(turn == 0) (x > "A") else (x<"A")
+    val KING = if (turn == 0) "k" else "K"
+    for(i<-Range(0,8)){
+      for(j<-Range(0,8)){
+        if(board(i)(j)==KING){
+          kingPosx = i
+          kingPosy = j
+        }
+      }
+    }
+    println("king : "+kingPosx+", "+kingPosy)
+
+    for(i<-Range(0,8)){
+      for(j<-Range(0,8)){
+        if(isOpponent(board(i)(j))){
+          print(generalValidation(Array(i,j,kingPosx,kingPosy),1-turn,board)+", ")
+          println(moveValidation(Array(i,j,kingPosx,kingPosy),1-turn,board))
+          if( generalValidation(Array(i,j,kingPosx,kingPosy),1-turn,board)&& moveValidation(Array(i,j,kingPosx,kingPosy),1-turn,board)){
+            indanger = true
+          }
+        }
+      }
+    }
+    indanger
+  }
   def moveValidation (index : Array[Int] , turn : Int ,board :state ) : Boolean ={
-    println(board(index(0))(index(1)))
     if(board(index(0))(index(1)) == "P" || board(index(0))(index(1)) == "p"){
       validPawnMove(index,turn,board)
     }else if(board(index(0))(index(1)) == "R" || board(index(0))(index(1)) == "r"){
@@ -307,7 +316,6 @@ object Chess{
 
   }
   def moveGenerate (index : Array[Int] , state : state) : state = {
-    println("movveeeee")
     state(index(2))(index(3)) = state(index(0))(index(1))
 
     if((index(0) + index(1)) % 2 ==0){
@@ -327,7 +335,6 @@ object Chess{
     val yto = move.charAt(3).asDigit
 
     if(xfrom.<('A') || xfrom.>('H') || xto.<('A') || xto.>('H') || yfrom.<(1) || yfrom.>(8) || yto.<(1) || yto.>(8) ) {
-      println("Out of index")
       return false
     }
     true
@@ -475,15 +482,11 @@ object Chess{
   def chess_controller:controller = ( state: state,move: String, turn: Int)=> {
 
     var index= new Array[Int](4);
-    println(move)
     var flag :Boolean=false;
     var promotion :Boolean = false;
 
-    println(canPrometed(turn,state))
-    println(promotedpiece(turn, move))
 
     if(canPrometed(turn, state) && promotedpiece(turn, move)){
-      println("Promation validation")
       Promotion(turn,state,move)
       flag = true
       promotion = true
@@ -496,7 +499,6 @@ object Chess{
 //      println("vvvvvvvvvvvv")
 //      (state, if(turn%2==0)status.Player_1_turn else status.Player_0_turn ,"After Promotion" )
 //    }
-
     /*
     steps >> 1) validate input  "tmam an l7rka gwa al board w anha kmlaa"
              2) valiate move
@@ -508,15 +510,23 @@ object Chess{
       index(3) = convertCharacterToIndex(move(2))
 
 
-      println(index(0) + " " + index(1) + " " + index(2) + " " + index(3))
-
-      println(generalValidation(index,turn,state))
-      println(moveValidation(index,turn,state))
       if(generalValidation(index,turn,state) && moveValidation(index,turn,state)){
-        println("validatiiiion done")
-        moveGenerate(index,state)
-        flag = true
-
+        //simulate the move on another board
+        val newBoard = chess_initial()
+        for(i<-Range(0,8)) {
+          for(j<-Range(0,8)){
+            newBoard(i)(j)= state(i)(j)
+          }
+        }
+        moveGenerate(index,newBoard)
+        //check if it's safe for the king
+        if(!isMyKingInDanger(newBoard,turn)){
+          moveGenerate(index,state)
+          flag = true
+        }
+        else{
+          flag = false
+        }
         if(canPrometed(turn , state)) {
           promotion = true;
           flag = false
@@ -526,7 +536,6 @@ object Chess{
 
 
       }else{
-        println("not valid")
         flag = false
       }
 
