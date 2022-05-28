@@ -492,10 +492,10 @@ object Chess{
 //        if(!flag && !promotion) "Invalid move" else if (promotion) "Promotion" else "")
     }
 
-    if(flag && promotion){
-      println("vvvvvvvvvvvv")
-      (state, if(turn%2==0)status.Player_1_turn else status.Player_0_turn ,"After Promotion" )
-    }
+//    if(flag && promotion){
+//      println("vvvvvvvvvvvv")
+//      (state, if(turn%2==0)status.Player_1_turn else status.Player_0_turn ,"After Promotion" )
+//    }
 
     /*
     steps >> 1) validate input  "tmam an l7rka gwa al board w anha kmlaa"
@@ -532,10 +532,16 @@ object Chess{
 
 
     }else{
-      flag = false
+      if(promotion){
+        flag = true
+      }else{
+        flag = false
+      }
+
     }
 
-
+    (state,if( flag ) if(turn%2==0)status.Player_0_turn else status.Player_1_turn else status.Invalid,
+            if(!flag && !promotion) "Invalid move" else if (promotion) "Promotion" else "")
 
   }
 
