@@ -120,7 +120,7 @@ object Engine extends JFXApp3 {
       //vars and vals engine related
       val t = new TextField()
       val tt = new Text(){
-        this.text = "Welcome to GameBuddy ..."
+        this.text = ">>Welcome to GameBuddy ... First Player's turn:"
         this.layoutX = 0
         this.layoutY = BOARDWIDTH+TEXTFIELDHEIGHT-4
         this.stroke = Blue
