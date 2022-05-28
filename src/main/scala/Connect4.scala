@@ -1,20 +1,23 @@
-import definitions.{click_to_move, controller, drawer, state}
+import definitions.status.{Invalid, status}
+import definitions.{click_to_move, controller, drawer, input, state, status}
 import javafx.scene.shape.StrokeLineJoin
 import scalafx.scene.Node
-import scalafx.scene.paint.Color.{Black, Blue, DarkBlue, DarkCyan, DarkMagenta, DarkViolet, LightPink, Red, White}
+import scalafx.scene.paint.Color.{Black, Blue, Brown, Burlywood, CadetBlue, Chocolate, DarkBlue, DarkCyan, DarkKhaki, DarkMagenta, DarkOliveGreen, DarkSalmon, DarkViolet, Goldenrod, Green, IndianRed, LavenderBlush, LightBlue, LightCyan, LightPink, LimeGreen, Magenta, MediumBlue, OrangeRed, Pink, PowderBlue, Red, White}
 import scalafx.scene.paint.{Color, LinearGradient}
 import scalafx.scene.shape.{Circle, Rectangle}
 import scalafx.scene.shape.Shape.sfxShape2jfx
 import scalafx.scene.text.Text
 import scalafx.scene.text.Text.sfxText2jfx
 
+import scala.util.control.Breaks.break
+
 object Connect4 {
   def connect4_initial = Array.fill[String](6,7)(".")
   val connect4_BOARDWIDTH = 600.0
   val connect4_click_handler:click_to_move =(x:Double,y:Double)=>{
-    s"${Math.floor(x/(connect4_BOARDWIDTH/7))})"
+    s"${Math.floor(x/(connect4_BOARDWIDTH/7)).toInt}"
   }
-  val connect4_drawer:drawer=(x:state)=>{
+  def connect4_drawer:drawer=(x:state)=>{
     val CELLWIDTH = connect4_BOARDWIDTH / 7
     val CELLHEIGHT = connect4_BOARDWIDTH / 6
     val gap = CELLWIDTH/5
@@ -30,14 +33,16 @@ object Connect4 {
       r.layoutY = i * CELLHEIGHT
       r.width = CELLWIDTH
       r.height = CELLHEIGHT
-      r.fill = Color.DarkCyan
+      r.fill = Color(0.3,0.3,0.3,1)
       val center_y = (i+0.5)*CELLHEIGHT
       val center_x = (j+0.5)*CELLWIDTH
       val c = new Circle(){
         this.centerX = center_x
         this.centerY = center_y
-        this.fill = if(x(i)(j)=="x") DarkMagenta else if(x(i)(j)=="y") LightPink else White
+        this.fill = if(x(i)(j)=="x") CadetBlue else if(x(i)(j)=="y") Chocolate else White
         this.radius = CIRCLERADIUS
+        this.stroke = Color(0.2,0.2,0.2,1)
+        this.strokeWidth = 4
       }
       sfxShape2jfx(r).setSmooth(true)
       lst = lst .:: (r)
@@ -46,8 +51,37 @@ object Connect4 {
     lst=lst.appendedAll(t_lst)
     lst
   }
-  val connect4_controller:controller=(state,input,turn)=>{
-    (null,null,null)
+  def connect4_controller:controller= ( state: state , move:input, turn : Int)=>{
+    var flag :Boolean=false
+    var returned:(state,status,String)=null
+    var col = 0
+    println(move)
+    if(move.length == 1){
+      try {
+        col = move.toInt
+      }
+      catch {
+        case e:Exception => (state,status.Invalid,status.Invalid.toString)
+      }
+      if(col >= 0 && col<= 6){// valid input
+        var i=5
+        while(!flag && i > -1){
+          if(state(i)(col)=="."){
+            state(i)(col)= if(turn==0)"x" else "y"
+            val s =if(turn==0) status.Player_1_turn else status.Player_0_turn
+            returned = (state,s,s.toString);
+            flag = true
+          }
+          i-=1;
+        }
+      }
+    }
+    if(!flag){
+      (state,status.Invalid,"Invalid")
+    }
+    else {
+      returned
+    }
   }
 //    //input form: "x0 y0 x1 y1 "
 //    // (0,0) is the top left square of the board as it's shown in the scene

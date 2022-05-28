@@ -142,7 +142,7 @@ object Engine extends JFXApp3 {
       val clickcount = new IntegerProperty(this, "clickcount", 0);
       def processInput(in:String)={
         clickcount.value = 0;
-        val inputresult = controller(state, in, turn);
+        val inputresult = controller(state, in, turn%2);
         inputBuffer.value = ""
         val res = inputresult._2
         res match {
