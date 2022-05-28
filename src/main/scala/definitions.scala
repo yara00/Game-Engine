@@ -8,6 +8,7 @@ object definitions{
   type drawable = List[Node]
   type drawer = state =>drawable
   type controller = (state,input,turn)=>(state,status,String)
+  type click_to_move = (Double,Double)=>input
 
   object status extends Enumeration{
     type status = Value

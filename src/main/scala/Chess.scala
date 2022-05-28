@@ -1,4 +1,4 @@
-import definitions.{controller, drawer, input, state, status, turn}
+import definitions.{click_to_move, controller, drawer, input, state, status, turn}
 import scalafx.application.JFXApp3
 import scalafx.geometry.Insets
 import scalafx.scene.text._
@@ -16,6 +16,7 @@ import scala.jdk.CollectionConverters._
 import scala.language.postfixOps
 
 object Chess extends JFXApp3{
+  val chess_BOARDWIDTH = 800
   def intialstate () : state = Array(
     Array("R", "N", "B","Q","K","B","N","R"),
     Array("P", "P", "P","P","P", "P", "P","P"),
@@ -26,7 +27,11 @@ object Chess extends JFXApp3{
     Array("p", "p", "p","p","p", "p", "p","p"),
     Array("r", "n", "b","q","k","b","n","r"),
   )
-
+  val chess_click_handler:click_to_move =(x:Double,y:Double)=>{
+    val X = 'A'+Math.floor(x/(chess_BOARDWIDTH/3))
+    val Y = 8 - Math.floor(y/(chess_BOARDWIDTH/3))
+    s"${x}${Y}"
+  }
   def promotedpiece (turn : Int) : String = {
     println("Your pawn can be promoted choose a piece")
     val piece = scala.io.StdIn.readLine()

@@ -1,5 +1,5 @@
 import definitions.status.status
-import definitions.{controller, drawer, input, state, status, turn}
+import definitions.{click_to_move, controller, drawer, input, state, status, turn}
 import javafx.scene.shape.StrokeLineJoin
 import scalafx.scene.Node
 import scalafx.scene.paint.Color.{Black, Blue, Red, White}
@@ -10,8 +10,11 @@ import scalafx.scene.text.Text.sfxText2jfx
 
 object xo {
   val xo_BOARDWIDTH = 600;
-//  val xo_initial: state = Array.fill(3,3)(" ")
   def xo_initial = Array.fill(3,3)(" ")
+  val xo_click_handler:click_to_move =(x:Double,y:Double)=>{
+    println(x+" - "+y)
+    s"${x.toInt/(xo_BOARDWIDTH/3)} ${y.toInt/(xo_BOARDWIDTH/3)}"
+  }
   val xo_controller: controller = (x: state, in: input, turn: turn) => {
     val getSymbol = (turn: turn) => {
       (turn%2) match {
@@ -60,6 +63,7 @@ object xo {
         }
       }
     }
+    println(in)
     val sel = in.split(" ")
     val returned = (null, status.Invalid, "invalid square")
     var invalid:Boolean = false;
@@ -86,7 +90,8 @@ object xo {
         }
         else {
           x(row)(col) = player
-          (x, getStatus(x, turn), "Valid")
+          val r = getStatus(x, turn)
+          (x, r,r.toString )
         }
       }
     }

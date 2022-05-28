@@ -1,6 +1,14 @@
-import definitions.{controller, drawer, state}
+import definitions.{click_to_move, controller, drawer, state}
 
 object Checkers {
+
+  val checkers_BOARDWIDTH:Int = ???//in pixels
+
+  val checkers_click_handler:click_to_move = (x:Double, y:Double)=>{
+    val X ='A' + Math.floor(x%(checkers_BOARDWIDTH/8))
+    val Y = 8  - Math.floor(y%(checkers_BOARDWIDTH/8))
+    s"${x}${Y}"
+  }
 //  val Checkers_drawer:drawer=(state:state)=>{
 //    //... prepare a list of nodes (Node could ) from state...
 //    //... return the list

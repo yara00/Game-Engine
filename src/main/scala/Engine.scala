@@ -1,3 +1,4 @@
+import Connect4.{connect4_BOARDWIDTH, connect4_click_handler, connect4_controller, connect4_drawer, connect4_initial}
 import definitions._
 import definitions.status._
 import javafx.geometry.Insets
@@ -10,9 +11,10 @@ import scalafx.scene.control.TextField.sfxTextField2jfx
 import scalafx.scene.control.{Button, TextField}
 import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.input.KeyCode
+import scalafx.scene.input.KeyCode.ESCAPE
 import scalafx.scene.layout.{HBox, VBox}
 import scalafx.scene.paint.Color._
-import scalafx.scene.text.Text
+import scalafx.scene.text.{Font, Text}
 import scalafx.scene.{Group, Node, Scene}
 import xo._
 
@@ -23,11 +25,12 @@ import scala.sys.exit
 
 object Engine extends JFXApp3 {
   var dim: Int=3;   //dimension (8 for chess, 3 for xo , ... )
-  var BOARDWIDTH:Int=600;
+  var BOARDWIDTH=600.0;
   val TEXTFIELDHEIGHT = 20
   var signalingClickCount = 1       // default is 1
   var controller: controller = null
   var drawer: drawer = null
+  var click_to_move:click_to_move=null
   //initial value for state is game dependent too
   var state: state = null;
   var turn: turn = 0;
@@ -47,12 +50,21 @@ object Engine extends JFXApp3 {
       signalingClickCount = 1;
       state = xo_initial
       turn = 0;
+      click_to_move = xo_click_handler
       Engine.stage.scene = generateGameScene();
     }
 
 
     c4ICON.onMousePressed= (e:Any) => {
-      println("C444444444")
+      drawer=connect4_drawer
+      controller = connect4_controller
+      dim = 7
+      BOARDWIDTH = connect4_BOARDWIDTH
+      signalingClickCount = 1;
+      state = connect4_initial
+      turn = 0;
+      click_to_move=connect4_click_handler
+      Engine.stage.scene = generateGameScene();
     }
     chICON.onMousePressed= (e:Any) => {
       println("Chesssss")
@@ -103,16 +115,23 @@ object Engine extends JFXApp3 {
   }
 
   def generateGameScene:()=>Scene =()=>{
-    new Scene(BOARDWIDTH,BOARDWIDTH+(TEXTFIELDHEIGHT+2)) {
+    new Scene(BOARDWIDTH,BOARDWIDTH+(TEXTFIELDHEIGHT+1)) {
       //game dependent values:
       //vars and vals engine related
       val t = new TextField()
-      sfxTextField2jfx(t).setMinSize(BOARDWIDTH/dim,TEXTFIELDHEIGHT)
-      t.layoutY = BOARDWIDTH+1
-      t.layoutX = BOARDWIDTH-BOARDWIDTH/dim
+      val tt = new Text(){
+        this.text = "Welcome to GameBuddy ..."
+        this.layoutX = 0
+        this.layoutY = BOARDWIDTH+TEXTFIELDHEIGHT-4
+        this.stroke = Blue
+        this.font.value = new Font("Comic-sans",13)
+      }
+      sfxTextField2jfx(t).setPrefSize(BOARDWIDTH/dim,TEXTFIELDHEIGHT)
+      t.layoutY = BOARDWIDTH
+      t.layoutX = BOARDWIDTH-(BOARDWIDTH/dim)
       sfxTextField2jfx(t).setBackground(new Background(new BackgroundFill(Color.color(0.3,0.2,0.2,0.3),CornerRadii.EMPTY,Insets.EMPTY)))
       var ROOT = new Group();
-      content = List(ROOT,t);
+      content = List(ROOT,t,tt);
       val drawState = (drawer: drawer, state: state) => {
         sfxGroup2jfx(ROOT).getChildren.removeAll();
         (drawer(state)).foreach((x) => {
@@ -135,28 +154,28 @@ object Engine extends JFXApp3 {
           case Draw => System.out.println("Draw");drawState(drawer, state);
           case _ => System.out.println(s"UNHANDLED CASE!");
         }
+        tt.setText(inputresult._3)
       }
       this.onKeyPressed = (key)=>{
         if(key.getCode.isWhitespaceKey){
           processInput(t.getText())
           t.clear()
         }
-        else if(key.getCode==27){
+        else if(key.getCode.getCode==27){
           stage.scene = MenuScene
         }
         else {
-          println(key.getCode+": unhandled")
+          println(key.getCode.getCode+": unhandled key press")
         }
       }
       ROOT.onMousePressed = (ev) => {
-        val x = Math.floor(ev.getSceneX / (BOARDWIDTH / dim))
-        val y = Math.floor(ev.getSceneY / (BOARDWIDTH / dim))
-        inputBuffer.value += (s"${x} ${y} ")
+//        val x = Math.floor(ev.getSceneX / (BOARDWIDTH / dim))
+//        val y = Math.floor(ev.getSceneY / (BOARDWIDTH / dim))
+        inputBuffer.value += (click_to_move(ev.getSceneX,ev.getSceneY))
         clickcount.value +=1;
         if (clickcount.value == signalingClickCount) {
           processInput(inputBuffer.value)
         };
-//        System.out.println(s"${x} ${y} ")
       }
       drawState(drawer, state);
     }
