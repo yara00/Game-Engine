@@ -272,23 +272,22 @@ object Chess{
     var kingPosx = 0
     var kingPosy = 0
     var indanger = false;
-    val isOpponent:(String)=>Boolean = (x:String)=> if(turn == 0) (x > "A") else (x<"A")
+    val isOpponent:(String)=>Boolean = (x:String)=> if(turn == 0) (x < "a") else (x>"a")
     val KING = if (turn == 0) "k" else "K"
     for(i<-Range(0,8)){
       for(j<-Range(0,8)){
         if(board(i)(j)==KING){
+          println(s"king ${i},${j}")
           kingPosx = i
           kingPosy = j
         }
       }
     }
-    println("king : "+kingPosx+", "+kingPosy)
-
     for(i<-Range(0,8)){
       for(j<-Range(0,8)){
         if(isOpponent(board(i)(j))){
-          print(generalValidation(Array(i,j,kingPosx,kingPosy),1-turn,board)+", ")
-          println(moveValidation(Array(i,j,kingPosx,kingPosy),1-turn,board))
+//          print(generalValidation(Array(i,j,kingPosx,kingPosy),1-turn,board)+", ")
+//          println(moveValidation(Array(i,j,kingPosx,kingPosy),1-turn,board))
           if( generalValidation(Array(i,j,kingPosx,kingPosy),1-turn,board)&& moveValidation(Array(i,j,kingPosx,kingPosy),1-turn,board)){
             indanger = true
           }
