@@ -1,8 +1,11 @@
-import Connect4.{connect4_BOARDWIDTH, connect4_click_handler, connect4_controller, connect4_drawer, connect4_initial}
+import Chess._
+import Connect4._
+import xo._
+import Checkers._
 import definitions._
 import definitions.status._
 import javafx.geometry.Insets
-import javafx.scene.layout.{Background, BackgroundFill, Border, BorderStroke, CornerRadii}
+import javafx.scene.layout.{Background, BackgroundFill, CornerRadii}
 import javafx.scene.paint.{Color, Paint}
 import scalafx.application.JFXApp3
 import scalafx.beans.property.{IntegerProperty, StringProperty}
@@ -10,15 +13,10 @@ import scalafx.scene.Group.sfxGroup2jfx
 import scalafx.scene.control.TextField.sfxTextField2jfx
 import scalafx.scene.control.{Button, TextField}
 import scalafx.scene.image.{Image, ImageView}
-import scalafx.scene.input.KeyCode
-import scalafx.scene.input.KeyCode.ESCAPE
 import scalafx.scene.layout.{HBox, VBox}
 import scalafx.scene.paint.Color._
 import scalafx.scene.text.{Font, Text}
 import scalafx.scene.{Group, Node, Scene}
-import xo._
-
-import java.awt.RenderingHints.Key
 import scala.language.postfixOps
 import scala.sys.exit
 
@@ -67,7 +65,15 @@ object Engine extends JFXApp3 {
       Engine.stage.scene = generateGameScene();
     }
     chICON.onMousePressed= (e:Any) => {
-      println("Chesssss")
+      drawer=chess_drawer
+      controller = chess_controller
+      dim = 8
+      BOARDWIDTH = chess_BOARDWIDTH
+      signalingClickCount = 2;
+      state = chess_initial
+      turn = 0;
+      click_to_move=chess_click_handler
+      Engine.stage.scene = generateGameScene();
     }
     ckICON.onMousePressed= (e:Any) => {
       println("Checkerss")
@@ -120,7 +126,7 @@ object Engine extends JFXApp3 {
       //vars and vals engine related
       val t = new TextField()
       val tt = new Text(){
-        this.text = "Welcome to GameBuddy ..."
+        this.text = s"turn: ${turn+1} "+">>Welcome to GameBuddy ... First Player's turn:"
         this.layoutX = 0
         this.layoutY = BOARDWIDTH+TEXTFIELDHEIGHT-4
         this.stroke = Blue
@@ -133,8 +139,9 @@ object Engine extends JFXApp3 {
       var ROOT = new Group();
       content = List(ROOT,t,tt);
       val drawState = (drawer: drawer, state: state) => {
-        sfxGroup2jfx(ROOT).getChildren.removeAll();
+        sfxGroup2jfx(ROOT).getChildren.clear()
         (drawer(state)).foreach((x) => {
+          println((x).toString())
           sfxGroup2jfx(ROOT).getChildren.add(x)
         })
       }
@@ -142,11 +149,13 @@ object Engine extends JFXApp3 {
       val clickcount = new IntegerProperty(this, "clickcount", 0);
       def processInput(in:String)={
         clickcount.value = 0;
-        val inputresult = controller(state, in, turn);
-        inputBuffer.value = ""
+        val inputresult = controller(state, in, turn%2);
+        val l = click_to_move(1,1).length
         val res = inputresult._2
+        val oldinputBuffer= inputBuffer.value
+        inputBuffer.value =""
         res match {
-          case Invalid => System.out.println("INVALID");
+          case Invalid => System.out.println("INVALID");inputBuffer.value = oldinputBuffer.takeRight(l*(signalingClickCount-1))
           case Player_0_turn => state = inputresult._1; turn += 1; drawState(drawer, state);
           case Player_1_turn => state = inputresult._1; turn += 1; drawState(drawer, state);
           case Player_0_won => println("X won");drawState(drawer, state);turn=0
@@ -154,7 +163,7 @@ object Engine extends JFXApp3 {
           case Draw => System.out.println("Draw");drawState(drawer, state);
           case _ => System.out.println(s"UNHANDLED CASE!");
         }
-        tt.setText(inputresult._3)
+        tt.setText(s"turn: ${turn+1} "+inputresult._3)
       }
       this.onKeyPressed = (key)=>{
         if(key.getCode.isWhitespaceKey){
@@ -173,7 +182,8 @@ object Engine extends JFXApp3 {
 //        val y = Math.floor(ev.getSceneY / (BOARDWIDTH / dim))
         inputBuffer.value += (click_to_move(ev.getSceneX,ev.getSceneY))
         clickcount.value +=1;
-        if (clickcount.value == signalingClickCount) {
+        val l = click_to_move(1,1).length
+        if (clickcount.value == signalingClickCount|| inputBuffer.value.length==l*signalingClickCount) {
           processInput(inputBuffer.value)
         };
       }

@@ -16,9 +16,9 @@ import scala.::
 import scala.jdk.CollectionConverters._
 import scala.language.postfixOps
 
-object Chess extends JFXApp3{
-  val chess_BOARDWIDTH = 800
-  def intialstate () : state = Array(
+object Chess{
+  def chess_BOARDWIDTH = 560
+  def chess_initial () : state = Array(
     Array("R", "N", "B","Q","K","B","N","R"),
     Array("P", "P", "P","P","P", "P", "P","P"),
     Array("-",".","-",".","-",".","-","."),
@@ -28,10 +28,10 @@ object Chess extends JFXApp3{
     Array("p", "p", "p","p","p", "p", "p","p"),
     Array("r", "n", "b","q","k","b","n","r"),
   )
-  val chess_click_handler:click_to_move =(x:Double,y:Double)=>{
-    val X = 'A'+Math.floor(x/(chess_BOARDWIDTH/3))
-    val Y = 8 - Math.floor(y/(chess_BOARDWIDTH/3))
-    s"${x}${Y}"
+  def chess_click_handler:click_to_move =(x:Double,y:Double)=>{
+    val X = ('A'+(x/(chess_BOARDWIDTH/8)).toInt).toChar
+    val Y = 8 - (y/(chess_BOARDWIDTH/8)).toInt
+    s"${X.toString}${Y}"
   }
   def promotedpiece (turn : Int) : String = {
     println("Your pawn can be promoted choose a piece")
@@ -342,13 +342,13 @@ object Chess extends JFXApp3{
 
   }
 
-  val chess_drawer:drawer =  (x:state)=>{
+  def chess_drawer:drawer =  (x:state)=>{
     var lst: List[Node]= List()
     lst = draw_board()
-    for (row <- Range(0, 7)) {
-      for (col <- Range(0, 7)) {
+    for (row <- Range(0, 8)) {
+      for (col <- Range(0, 8)) {
         if(x(row)(col)!="." && x(row)(col)!="-" )
-        lst = lst.appended(draw_piece(((8*row)+col),x(row)(col)))
+        lst = lst.appended(draw_piece(((8*col)+row),x(row)(col)))
       }
     }
     lst
@@ -441,22 +441,23 @@ object Chess extends JFXApp3{
   }
   def draw_piece(n:Int, s:String) : ImageView ={
     s match {
-      case "k"  =>return draw_wk(n)
-      case "q"  =>return draw_wq(n)
-      case "r"  =>return draw_wr(n)
-      case "n"  =>return draw_wn(n)
-      case "b"  =>return draw_wb(n)
-      case "p"  =>return draw_wp(n)
-      case "K"  =>return draw_bk(n)
-      case "Q"  =>return draw_bq(n)
-      case "R"  =>return draw_br(n)
-      case "N"  =>return draw_bn(n)
-      case "B"  =>return draw_bb(n)
-      case "p"  =>return draw_bp(n)
+      case "k"  => draw_wk(n)
+      case "q"  => draw_wq(n)
+      case "r"  => draw_wr(n)
+      case "n"  => draw_wn(n)
+      case "b"  => draw_wb(n)
+      case "p"  => draw_wp(n)
+      case "K"  => draw_bk(n)
+      case "Q"  => draw_bq(n)
+      case "R"  => draw_br(n)
+      case "N"  => draw_bn(n)
+      case "B"  => draw_bb(n)
+      case "P"  => draw_bp(n)
     }
 
   }
-  val chess_controller:controller = ( state: state,move: String, turn: Int)=> {
+  def chess_controller:controller = ( state: state,move: String, turn: Int)=> {
+
     var index= new Array[Int](4);
     println(move)
     var flag :Boolean=false;
@@ -549,31 +550,22 @@ object Chess extends JFXApp3{
         rect.setId(a.toString+ b.toString)
         board = board.appended(rect)
         // content = board
-
       }
       val c = letters(a)
-      val t = new Text(board(board.length-1).x.value+25  ,board(board.length-1).y.value +120,c)
-      t.setStyle("-fx-font: 30 sans-serif;")
-      t.setFill(Color.Black)
+      val t = new Text(board(board.length-1).x.value  ,board(board.length-1).y.value +70,c)
+      t.setStyle("-fx-font: 15 sans-serif;")
+      t.fill = Color(0,0,0,0.7)
       texts= texts.appended(t)
     }
     val i =0;
     for( i <- 1 to 8) {
-      val n = new Text( board((56+(i-1))).x.value + 120  ,board((56+(i-1))).y.value +45 ,(9-i).toString)
-      n.setStyle("-fx-font: 30 sans-serif;")
+      val n = new Text( board((56+(i-1))).x.value +60  ,board((56+(i-1))).y.value+15 ,(9-i).toString)
+      n.setStyle("-fx-font: 15 sans-serif;")
+      n.fill = Color(0,0,0,0.7)
       texts= texts.appended(n)
     }
     lst = board ::: texts
     lst
-  }
-  override def start(): Unit = {
-    stage = new JFXApp3.PrimaryStage {
-      scene = new Scene(800, 800) {
-        fill = Grey
-
-        content =  board ::: texts
-      }
-    }
   }
   def letters(n:Int): String ={
     n match{

@@ -2,6 +2,8 @@ import definitions.status.status
 import definitions.{click_to_move, controller, drawer, input, state, status, turn}
 import javafx.scene.shape.StrokeLineJoin
 import scalafx.scene.Node
+import scalafx.scene.effect.Glow
+import scalafx.scene.paint.Color
 import scalafx.scene.paint.Color.{Black, Blue, Red, White}
 import scalafx.scene.shape.Rectangle
 import scalafx.scene.shape.Shape.sfxShape2jfx
@@ -9,13 +11,13 @@ import scalafx.scene.text.Text
 import scalafx.scene.text.Text.sfxText2jfx
 
 object xo {
-  val xo_BOARDWIDTH = 600;
+  def xo_BOARDWIDTH = 600;
   def xo_initial = Array.fill(3,3)(" ")
-  val xo_click_handler:click_to_move =(x:Double,y:Double)=>{
+  def xo_click_handler:click_to_move =(x:Double,y:Double)=>{
     println(x+" - "+y)
     s"${x.toInt/(xo_BOARDWIDTH/3)} ${y.toInt/(xo_BOARDWIDTH/3)}"
   }
-  val xo_controller: controller = (x: state, in: input, turn: turn) => {
+  def xo_controller: controller = (x: state, in: input, turn: turn) => {
     val getSymbol = (turn: turn) => {
       (turn%2) match {
         case 0 => "x"
@@ -63,7 +65,6 @@ object xo {
         }
       }
     }
-    println(in)
     val sel = in.split(" ")
     val returned = (null, status.Invalid, "invalid square")
     var invalid:Boolean = false;
@@ -97,7 +98,7 @@ object xo {
     }
   }
 
-  val xo_drawer:drawer=
+  def xo_drawer:drawer=
     (x:state)=>{
       val CELLWIDTH = xo_BOARDWIDTH / 3
       var lst: List[Node]= List()
@@ -111,8 +112,8 @@ object xo {
         r.layoutY = i * CELLWIDTH
         r.width = CELLWIDTH
         r.height = CELLWIDTH
-        r.fill = White
-        r.stroke = Black
+        r.fill =  Color(0.1,0.1,0.1,1)
+        r.stroke =  Color(0.6,0.6,0.6,1)
         val text= if (x(i)(j)=="x") "X" else if (x(i)(j)=="o") "O" else ""
         val center_y = (j+0.5)*CELLWIDTH
         var center_x = (i+0.5)*CELLWIDTH
@@ -120,11 +121,12 @@ object xo {
           center_x=center_x- CELLWIDTH/40
         val gap = CELLWIDTH/5
         val t = new Text(x = center_x-CELLWIDTH/2+gap/2, y = center_y+CELLWIDTH/2-gap/2, t = text)
-        t.fill = if (x(i)(j)=="x") Red else if (x(i)(j)=="o") Blue else White
-        t.stroke = Black
-        sfxText2jfx(t).setStrokeWidth(6)
+        t.fill = if (x(i)(j)=="x") Red else if (x(i)(j)=="o") Blue else Color(0.8,0.8,0.8,1)
+        t.stroke =  White
+        sfxText2jfx(t).setStrokeWidth(2)
         sfxText2jfx(t).setStrokeLineJoin(StrokeLineJoin.ROUND)
         t.style =  s"-fx-font:normal ${CELLWIDTH-gap}pt ariel"
+        t.effect = new Glow(1)
         sfxShape2jfx(t).setSmooth(true)
         sfxShape2jfx(r).setStrokeWidth(4)
         sfxShape2jfx(r).setSmooth(true)
