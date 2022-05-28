@@ -33,42 +33,60 @@ object Chess{
     val Y = 8 - (y/(chess_BOARDWIDTH/8)).toInt
     s"${X.toString}${Y}"
   }
-  def promotedpiece (turn : Int) : String = {
+  def promotedpiece (turn : Int , piece : String) : Boolean = {
     println("Your pawn can be promoted choose a piece")
-    val piece = scala.io.StdIn.readLine()
+
     println(piece)
+    println(turn)
     if(turn == 0){
       if(piece!="r" && piece!="q" && piece!="n" && piece!="b"){
         println("not valid piece")
-        promotedpiece(turn)
+        false
       }else{
-        piece
+        true
       }
     }else{
       if(piece!="R" && piece!="Q" && piece!="N" && piece!="B"){
         println("not valid piece")
-        promotedpiece(turn)
+        false
       }else{
-        piece
+       true
       }
     }
   }
 
-  def checkPromotion (turn : Int , board : state) : state = {
+  def canPrometed (turn : Int , board : state) : Boolean = {
+   var found : Boolean = false
+    if(turn == 0){        // white
+      for( i<-0 until 8){
+        if(board(0)(i) == "p"){
+          found = true
+        }
+      }
+      found
+    }else{
+      for( i<-0 until 8){
+        if(board(7)(i) == "P"){
+          found = true
+        }
+      }
+      found
+    }
+  }
+
+  def Promotion (turn : Int , board : state , piece : String) : state = {
+    println(" func promotion >>>")
     var y_pos = -1
 
     if(turn == 0){      // white turn
       for(i <- 0 until 8) {
         if (board(0)(i) == "p") {
           y_pos = i
-
         }
       }
       println(y_pos)
       if(y_pos != -1) {
-        //        println("Your pawn can be promoted choose a piece")
-        //        val piece = scala.io.StdIn.readLine()
-        val piece = promotedpiece(turn)
+       // val piece = promotedpiece(turn)
         println("your piece is >> " + piece)
         board(0)(y_pos) = piece
       }
@@ -83,9 +101,7 @@ object Chess{
 
       println(y_pos)
       if(y_pos != -1){
-        //        println("Your pawn can be promoted choose a piece")
-        //        val piece = scala.io.StdIn.readLine()
-        val piece = promotedpiece(turn)
+       // val piece = promotedpiece(turn)
         println("your piece is >> " + piece)
         board(7)(y_pos) = piece
       }
@@ -461,6 +477,25 @@ object Chess{
     var index= new Array[Int](4);
     println(move)
     var flag :Boolean=false;
+    var promotion :Boolean = false;
+
+    println(canPrometed(turn,state))
+    println(promotedpiece(turn, move))
+
+    if(canPrometed(turn, state) && promotedpiece(turn, move)){
+      println("Promation validation")
+      Promotion(turn,state,move)
+      flag = true
+      promotion = true
+
+//      (state,if( flag ) if(turn%2==0)status.Player_0_turn else status.Player_1_turn else status.Invalid,
+//        if(!flag && !promotion) "Invalid move" else if (promotion) "Promotion" else "")
+    }
+
+//    if(flag && promotion){
+//      println("vvvvvvvvvvvv")
+//      (state, if(turn%2==0)status.Player_1_turn else status.Player_0_turn ,"After Promotion" )
+//    }
 
     /*
     steps >> 1) validate input  "tmam an l7rka gwa al board w anha kmlaa"
@@ -480,8 +515,16 @@ object Chess{
       if(generalValidation(index,turn,state) && moveValidation(index,turn,state)){
         println("validatiiiion done")
         moveGenerate(index,state)
-        checkPromotion(turn,state)
         flag = true
+
+        if(canPrometed(turn , state)) {
+          promotion = true;
+          flag = false
+          (state,if(flag ) if(turn%2==0)status.Player_1_turn else status.Player_0_turn else status.Invalid,
+            if(!flag && !promotion) "Invalid move" else if (promotion) "Promotion" else "")
+        }
+
+
       }else{
         println("not valid")
         flag = false
@@ -489,10 +532,17 @@ object Chess{
 
 
     }else{
-      flag = false
+      if(promotion){
+        flag = true
+      }else{
+        flag = false
+      }
+
     }
 
-    (state,if(flag) if(turn%2==0)status.Player_1_turn else status.Player_0_turn else status.Invalid,if(!flag) "Invalid move" else "")
+    (state,if( flag ) if(turn%2==0)status.Player_0_turn else status.Player_1_turn else status.Invalid,
+            if(!flag && !promotion) "Invalid move" else if (promotion) "Promotion" else "")
+
   }
 
   /*

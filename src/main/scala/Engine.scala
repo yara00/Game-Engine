@@ -155,7 +155,7 @@ object Engine extends JFXApp3 {
         val oldinputBuffer= inputBuffer.value
         inputBuffer.value =""
         res match {
-          case Invalid => System.out.println("INVALID");inputBuffer.value = oldinputBuffer.takeRight(l*(signalingClickCount-1))
+          case Invalid => System.out.println("INVALID");inputBuffer.value = oldinputBuffer.takeRight(l*(signalingClickCount-1)) ; drawState(drawer, state);
           case Player_0_turn => state = inputresult._1; turn += 1; drawState(drawer, state);
           case Player_1_turn => state = inputresult._1; turn += 1; drawState(drawer, state);
           case Player_0_won => println("X won");drawState(drawer, state);turn=0
