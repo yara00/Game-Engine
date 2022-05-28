@@ -11,15 +11,14 @@ import scala.collection.mutable.ArrayBuffer
 
 object Checkers {
   def checkers_initial = Array(
-    Array("-","b","-","b","-","b","-","b"),
-    Array("b","-","b","-","b","-","b","-"),
-    Array("-","b","-","b","-","b","-","b"),
-    Array("-","-","-","-","-","-","-","-"),
-    Array("-","-","-","-","-","-","-","-"),
     Array("w","-","w","-","w","-","w","-"),
     Array("-","w","-","w","-","w","-","w"),
     Array("w","-","w","-","w","-","w","-"),
-
+    Array("-","-","-","-","-","-","-","-"),
+    Array("-","-","-","-","-","-","-","-"),
+    Array("-","b","-","b","-","b","-","b"),
+    Array("b","-","b","-","b","-","b","-"),
+    Array("-","b","-","b","-","b","-","b"),
   )
   val checkers_BOARDWIDTH:Int = 560//in pixels
   val checkers_click_handler:click_to_move = (x:Double, y:Double)=>{
@@ -124,104 +123,8 @@ object Checkers {
     lst = board ::: texts
     lst
   }
-//  def draw_board(): List[Node]={
-//    var lst: List[Node]= List()
-//    var a = 0;
-//    var b = 0;
-//    for( a <- 1 to 8){
-//      for( b <- 1 to 8){
-//        val rect = Rectangle(70*(a-1),70*(b-1),70,70)
-//        if(b%2==0) {
-//          if (a % 2 == 0) {
-//            rect.setFill(Color.web("#f0d9b5"))
-//          }
-//          else {
-//            rect.setFill(Color.web("#b58863"))
-//          }
-//        }
-//        else
-//        {
-//          if (a % 2 == 0) {
-//            rect.setFill(Color.web("#b58863"))
-//          }
-//          else {
-//            rect.setFill(Color.web("#f0d9b5"))
-//
-//          }
-//        }
-//        rect.setId(a.toString+ b.toString)
-//        board = board.appended(rect)
-//        // content = board
-//
-//      }
-//      val c = letters(a)
-//      val t = new Text(board(board.length-1).x.value+25  ,board(board.length-1).y.value +120,c)
-//      t.setStyle("-fx-font: 30 sans-serif;")
-//      t.setFill(Color.Black)
-//      texts= texts.appended(t)
-//    }
-//    val i =0;
-//    for( i <- 1 to 8) {
-//      val n = new Text( board((56+(i-1))).x.value + 120  ,board((56+(i-1))).y.value +45 ,(9-i).toString)
-//      n.setStyle("-fx-font: 30 sans-serif;")
-//      texts= texts.appended(n)
-//    }
-//    lst = board ::: texts
-//    lst
-//  }
 
-//  val Checkers_controller:controller=(state,input,turn)=>{
-//    //input form: "x0 y0 x1 y1 "
-//    // (0,0) is the top left square of the board as it's shown in the scene
-//    // (0,7) is the bottom left square
-//
-//
-//    //      (0,0)------ x increases ---------->
-//    //        |             |
-//    //        |             y
-//    //        |             |
-//    //        |-----x----->(x,y)
-//    //   y increases
-//    //        |
-//    //        |
-//    //       \ /
-//
-//    //validate the move from (x0,y0) to (x1,y1)
-//    // ... perform move or return Invalid
-//    // return:
-//    // (state:new state or [null or old state if invalid] (whatever u like), status:[check status in definitions in xo.scala], String:[a message to show on screen(not necessary)])
-//  }
-//
-  // override
-  def parseInput(input: String): Unit = {
-    println("Please enter -from- pos: ");
-    val from = scala.io.StdIn.readLine()
-    println("Please enter -to- pos: ");
-    val to = scala.io.StdIn.readLine()
-    println("Input recieved is from " + from + " and to " + to)
-    println(revertIndex(from.charAt(0).asDigit))
-  }
-  def revertIndex(x: Int): Int = 8 - x
-  def initState(board: state): state = {
-   // var board = state.state
-   // state.flag = true
-    for(i <- 0 until(board.length)) {
-      for (j <- 0 until (board.length)) {
-        if (i < (board.length / 2) -1) {
-          if (i % 2 == 0 && j % 2 != 0) board(i)(j) = "b"
-          else if(i % 2 != 0 && j % 2 == 0) board(i)(j) = "b"
-          else board(i)(j) = "-"
-        }
-        else if(i > (board.length/2)) {
-          if (i % 2 != 0 && j % 2 == 0) board(i)(j) = "w"
-          else if(i % 2 == 0 && j % 2 != 0) board(i)(j) = "w"
-          else board(i)(j) = "-"
-        }
-        else board(i)(j) = "-"
-      }
-    }
-    board
-  }
+  def revertIndex(x: Int): Int = 7 - x
 
   def convertCharacterToIndex(x: Char) : Int ={
     x match {
@@ -243,41 +146,38 @@ object Checkers {
   }
 
   def promotionMatch(turn: Int): Int = turn match {
-    case 0 => 7
-    case 1 => 0
+    case 0 => 0
+    case 1 => 7
   }
   def offsetMatch(turn: Int, xf: Int, xt: Int) = (turn, xf, xt) match {
-    case (0, xf, xt) if xt -xf == 1 => 1
-    case (1, xf, xt) if xf - xt == 1 => 1
+    case (0, xf, xt) if xt -xf == -1 => 1
+    case (1, xf, xt) if xt - xf == 1 => 1
     case _ => 0
   }
   def forceEat(board: state, turn: turn): ArrayBuffer[String] = {
     val legalMoves = ArrayBuffer[String]();;
-   // val board = state.state;
     val playerPiece = turnMatch(turn)
     val playerKingPiece = "k".concat(playerPiece)
     if (turn == 0) {
-      for (i <- 0 until board.length) {
-        for (j <- 0 until board.length) {
+      for (x <- 0 until board.length) {
+        for (y <- 0 until board.length) {
+          val i = revertIndex(x)
+          val j = revertIndex(y)
           if (board(i)(j) == playerPiece || board(i)(j) == playerKingPiece) {
-            // down left
-            //00 --
-            //77 -+
-            if (i != 7 && j != 0 && (board(i + 1)(j - 1) == playerPiece || board(i + 1)(j - 1) == playerKingPiece))
-              legalMoves += (i + 1).toString.concat((j - 1).toString);
             // down right
-            if (i != 7 && j != 7 && (board(i + 1)(j + 1) == playerPiece || board(i + 1)(j + 1) == playerKingPiece))
-              legalMoves += (i + 1).toString.concat((j + 1).toString);
+            if (i != 0 && j != 0 && (board(i - 1)(j - 1) == "w" || board(i - 1)(j - 1) == "kw"))
+              legalMoves += (i - 1).toString.concat((j - 1).toString);
+            // down left
+            if (i != 0 && j != 7 && (board(i - 1)(j + 1) == "w" || board(i - 1)(j + 1) == "kw"))
+              legalMoves += (i - 1).toString.concat((j + 1).toString);
           }
           if (board(i)(j) == playerKingPiece) {
-            // up left
-            //70 +-
-            //77 ++
-            if (i != 0 && j != 0 && (board(i - 1)(j - 1) == playerPiece || board(i - 1)(j - 1) == playerKingPiece))
-              legalMoves += (i - 1).toString.concat((j - 1).toString)
             // up right
-            if (i != 0 && j != 7 && (board(i - 1)(j + 1) == playerPiece || board(i - 1)(j + 1) == playerKingPiece))
-              legalMoves += (i - 1).toString.concat((j + 1).toString)
+            if (i != 7 && j != 0 && (board(i + 1)(j - 1) == "w" || board(i + 1)(j - 1) == "kw"))
+              legalMoves += (i + 1).toString.concat((j - 1).toString)
+            // up left
+            if (i != 7 && j != 7 && (board(i + 1)(j + 1) == "w" || board(i + 1)(j + 1) == "kw"))
+              legalMoves += (i + 1).toString.concat((j + 1).toString)
           }
         }
       }
@@ -288,15 +188,19 @@ object Checkers {
         for(j <- 0 until board.length) {
           if(board(i)(j) == "w" || board(i)(j) == "kw") {
             // up left
-            if(i != 0 && j != 0 && (board(i-1)(j-1) == "b" || board(i-1)(j-1) == "kb"))  legalMoves += (i-1).toString.concat((j-1).toString)
+            if(i != 7 && j != 7 && (board(i+1)(j+1) == "b" || board(i+1)(j+1) == "kb"))
+              legalMoves += (i+1).toString.concat((j+1).toString);
             // up right
-            if(i != 0 && j != 7 && (board(i-1)(j+1) == "b" || board(i-1)(j+1) == "kb"))  legalMoves += (i-1).toString.concat((j+1).toString)
+            if(i != 7 && j != 0 && (board(i+1)(j-1) == "b" || board(i+1)(j-1) == "kb"))
+              legalMoves += (i+1).toString.concat((j-1).toString)
           }
           if(board(i)(j) == "kb") {
             // down left
-            if(i != 7 && j != 0 && (board(i+1)(j-1) == "b" || board(i+1)(j-1) == "kb"))  legalMoves += (i+1).toString.concat((j-1).toString);
+            if (i != 0 && j != 7 && (board(i - 1)(j + 1) == "b" || board(i - 1)(j + 1) == "kb"))
+              legalMoves += (i - 1).toString.concat((j + 1).toString);
             // down right
-            if(i != 7 && j != 7 && (board(i+1)(j+1) == "b" || board(i+1)(j+1) == "kb"))  legalMoves += (i+1).toString.concat((j+1).toString);
+            if (i != 0 && j != 0 && (board(i - 1)(j - 1) == "b" || board(i - 1)(j - 1) == "kb"))
+              legalMoves += (i - 1).toString.concat((j - 1).toString);
           }
         }
       }
@@ -310,94 +214,53 @@ object Checkers {
   }
 
   def isValidMove(move: String, board: state, turn: Int): Boolean = {
-   // val board = state.state;
-    if(!forceEat(board, turn).contains(move.substring(2,4)) && !unitMove(move.charAt(0), move.charAt(2))) {
-      println("lolo")
+    val yf = revertIndex(convertCharacterToIndex(move.charAt(0)))
+    val xf = revertIndex(8 - move.charAt(1).asDigit)
+    val yt = revertIndex(convertCharacterToIndex(move.charAt(2)))
+    val xt = revertIndex(8 - move.charAt(3).asDigit)
+
+    if(!forceEat(board, turn).isEmpty && !forceEat(board, turn).contains(xt.toString.concat(yt.toString))) {
       return false
     }
-    val xf = convertCharacterToIndex(move.charAt(0))
-    val yf = move.charAt(1).asDigit
-    if(board(xf)(yf) != turnMatch(turn) && board(xf)(yf) != "k".concat(turnMatch(turn))) {
-      println("soso")
+    if(!unitMove(xf, xt)) return false
+
+    if(board(xf)(yf) != turnMatch(turn) && board(xf)(yf) != "k".concat(turnMatch(turn)))
       return false
-    }
+
+    if(xf == xt || yf == yt) return false
     true
   }
   def isOuterEdge(x: Int): Boolean = {
     if(x == 0 || x == 7) return true;
     false
   }
-  def isValidInput(input: input): Boolean = {
-    val xf = convertCharacterToIndex(input.charAt(0))
-    val yf = convertCharacterToIndex(input.charAt(2))
-    val xt = input.charAt(1).asDigit
-    val yt = input.charAt(3).asDigit
-    if (xf.<(0) || xf.>(7) || xt.<(0) || xt.>(7) || yf.<(0) || yf.>(7) || yt.<(0) || yt.>(7)) {
-      println("Out of index")
-      return false
-    }
-    true
-  }
+
   def checkers_controller:controller=(board: state,move: input,turn: turn)=> {
-    println(move)
-    /**
-     *
-     * 1. validateInput
-     * 2. parseInput
-     * 3. checkPermittedMoves
-     * 4. updateState
-     *
-     * returns updatedState to be passed to the drawer function
-     */
     var flag: Boolean = true;
     var xf, yf, xt, yt = 0
+    val playerPiece = turnMatch(turn)
+    val playerKingPiece = ("k".concat(playerPiece))
     try {
-      xf = convertCharacterToIndex(move.charAt(0))
-      yf = 8 - move.charAt(1).asDigit
-      xt = convertCharacterToIndex(move.charAt(2))
-      yt = 8 - move.charAt(3).asDigit
+      yf = revertIndex(convertCharacterToIndex(move.charAt(0)))
+      xf = revertIndex(8 - move.charAt(1).asDigit)
+      yt = revertIndex(convertCharacterToIndex(move.charAt(2)))
+      xt = revertIndex(8 - move.charAt(3).asDigit)
     }
     catch {
       case e: Exception => flag = false
     }
+
     if (!flag) {
       (board, status.Invalid, "Invalid move")
     }
     else {
       flag = false;
-      var legalMoves = ArrayBuffer[String]()
-      val playerPiece = turnMatch(turn)
-      val playerKingPiece = ("k".concat(playerPiece))
-      if (!isValidInput(move)) {
-        flag = false
-
-      }
-
-      //legalMoves = forceEat(state, turn)
-      /* val moveTo: String = move.charAt(2).toString.concat(move.charAt(3).toString)
-     for(moves <- legalMoves if !legalMoves.contains(moveTo)) {
-       println("lolo")
-       state.flag = false
-       return state;
-     }
- */
-
-
-      //   val board = state.state
-      // moving a wrong piece (color) or from null pos or diagonal move length > 1
-      //  val diagonal = (xf - xt).abs;
-      else if (!isValidMove(move, board, turn)) {
+       if (!isValidMove(move, board, turn)) {
         flag = false;
       }
-      /*
-      if(board(xf)(yf) != playerPiece && board(xf)(yf) != playerKingPiece) {
-        state.flag = false
-        return state
-      };
-*/
+
       else if (board(xf)(yf) != playerKingPiece) {
         // diagonal movement and to pos is occupied by an opponent/null check
-        println("ana hena hehe")
         if (offsetMatch(turn, xf, xt) == 1 && board(xt)(yt) != playerPiece && board(xt)(yt) != playerKingPiece) {
           flag = true;
           board(xf)(yf) = "-" // reset from pos
@@ -432,12 +295,13 @@ object Checkers {
                 board(xt + xt - xf)(yt + yt - yf) = playerKingPiece
               }
             }
-            else board(xt)(yt) = playerPiece;
+            else board(xt)(yt) = playerKingPiece;
           }
           else board(xt)(yt) = playerKingPiece // normal move
         }
       }
-      // 2132 5041 3241 6150 5647 2534 4736
+
+
       (board, if (flag) if (turn % 2 == 0) status.Player_1_turn else status.Player_0_turn else status.Invalid, if (!flag) "Invalid move" else "")
     }
   }
