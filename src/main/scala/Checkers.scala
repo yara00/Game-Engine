@@ -1,10 +1,12 @@
 import Chess.letters
-import definitions.{controller, drawer, state}
+import definitions.{controller, drawer, input, state}
 import scalafx.scene.Node
 import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Rectangle
 import scalafx.scene.text.Text
+
+import scala.collection.mutable.ArrayBuffer
 
 object Checkers {
   var texts :List[Text]= List()
@@ -367,7 +369,7 @@ object Checkers {
 }
 object Main2 {
   def main(args: Array[String]): Unit = {
-    var checkers : Checkers = new Checkers;
+  /*  var checkers : Checkers = new Checkers;
     //checkers.parseInput("lolo")
     var turn = 1;
     var state : State = new State(8, 8);
@@ -379,6 +381,6 @@ object Main2 {
       println("Please enter -from- and -to- pos: ");
       val move = scala.io.StdIn.readLine()
       checkers.controller(move, state, turn)
-    }
+    }*/
   }
 }
