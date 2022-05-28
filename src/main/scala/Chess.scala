@@ -488,7 +488,8 @@ object Chess extends JFXApp3{
 
     (state,if(flag) if(turn%2==0)status.Player_1_turn else status.Player_0_turn else status.Invalid,if(!flag) "Invalid move" else "")
   }
-/*
+
+  /*
   val WK = new Image("file:assets/wk.png", 70, 70, false, false)
   val WQ = new Image("file:assets/wq.png", 60, 60, true, false)
   val WB = new Image("file:assets/wb.png", 70, 70, true, false)
@@ -509,7 +510,7 @@ object Chess extends JFXApp3{
   val BKn = new Image("file:assets/bkn.png", 60, 60, false, false)
   val BR = new Image("file:assets/br.png",  60, 60, false, false)
   val BP = new Image("file:assets/bp.png",  60, 60, true, false)
-*/
+  */
 
   var texts :List[Text]= List()
   var board: List[Rectangle] = List()

@@ -1,10 +1,110 @@
+import Chess.letters
 import definitions.{controller, drawer, state}
+import scalafx.scene.Node
+import scalafx.scene.image.{Image, ImageView}
+import scalafx.scene.paint.Color
+import scalafx.scene.shape.Rectangle
+import scalafx.scene.text.Text
 
 object Checkers {
-//  val Checkers_drawer:drawer=(state:state)=>{
-//    //... prepare a list of nodes (Node could ) from state...
-//    //... return the list
-//  }
+  var texts :List[Text]= List()
+  var board: List[Rectangle] = List()
+  val checkers_drawer:drawer =  (x:state)=>{
+    var lst: List[Node]= List()
+    lst = draw_board()
+    for (row <- Range(0, 7)) {
+      for (col <- Range(0, 7)) {
+        if(x(row)(col)!="-" )
+          lst = lst.appended(draw_piece(((8*row)+col),x(row)(col)))
+      }
+    }
+    lst
+  }
+  def draw_piece(n:Int, s:String) : ImageView = {
+    s match {
+      case "w" => return draw_w(n)
+      case "b" => return draw_b(n)
+      case "kw" => return draw_kw(n)
+      case "kb" => return draw_kb(n)
+
+    }
+  }
+    def draw_w(n: Int): ImageView = {
+      val W = new Image("file:assets/r.png", 70, 70, false, false)
+      val w = new ImageView(W)
+      w.setX(board(n).x.value)
+      w.setY(board(n).y.value)
+      w
+    }
+
+  def draw_b(n: Int): ImageView = {
+    val B  = new Image("file:assets/b.png", 70, 70, false, false)
+    val b = new ImageView(B)
+    b.setX(board(n).x.value)
+    b.setY(board(n).y.value)
+    b
+  }
+    def draw_kb(n: Int): ImageView = {
+      val KB  = new Image("file:assets/kb.png", 70, 70, false, false)
+      val kb = new ImageView(KB)
+      kb.setX(board(n).x.value)
+      kb.setY(board(n).y.value)
+      kb
+    }
+    def draw_kw(n: Int): ImageView = {
+      val KW  = new Image("file:assets/rk.png", 70, 70, false, false)
+      val kw = new ImageView(KW)
+      kw.setX(board(n).x.value)
+      kw.setY(board(n).y.value)
+      kw
+    }
+
+  def draw_board(): List[Node]={
+    var lst: List[Node]= List()
+    var a = 0;
+    var b = 0;
+    for( a <- 1 to 8){
+      for( b <- 1 to 8){
+        val rect = Rectangle(70*(a-1),70*(b-1),70,70)
+        if(b%2==0) {
+          if (a % 2 == 0) {
+            rect.setFill(Color.web("#f0d9b5"))
+          }
+          else {
+            rect.setFill(Color.web("#b58863"))
+          }
+        }
+        else
+        {
+          if (a % 2 == 0) {
+            rect.setFill(Color.web("#b58863"))
+          }
+          else {
+            rect.setFill(Color.web("#f0d9b5"))
+
+          }
+        }
+        rect.setId(a.toString+ b.toString)
+        board = board.appended(rect)
+        // content = board
+
+      }
+      val c = letters(a)
+      val t = new Text(board(board.length-1).x.value+25  ,board(board.length-1).y.value +120,c)
+      t.setStyle("-fx-font: 30 sans-serif;")
+      t.setFill(Color.Black)
+      texts= texts.appended(t)
+    }
+    val i =0;
+    for( i <- 1 to 8) {
+      val n = new Text( board((56+(i-1))).x.value + 120  ,board((56+(i-1))).y.value +45 ,(9-i).toString)
+      n.setStyle("-fx-font: 30 sans-serif;")
+      texts= texts.appended(n)
+    }
+    lst = board ::: texts
+    lst
+  }
+
 //  val Checkers_controller:controller=(state,input,turn)=>{
 //    //input form: "x0 y0 x1 y1 "
 //    // (0,0) is the top left square of the board as it's shown in the scene
