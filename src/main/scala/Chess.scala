@@ -484,8 +484,6 @@ object Chess{
     var index= new Array[Int](4);
     var flag :Boolean=false;
     var promotion :Boolean = false;
-
-
     if(canPrometed(turn, state) && promotedpiece(turn, move)){
       Promotion(turn,state,move)
       flag = true
@@ -548,10 +546,14 @@ object Chess{
       }
 
     }
-
-    (state,if( flag ) if(turn%2==0)status.Player_0_turn else status.Player_1_turn else status.Invalid,
-            if(!flag && !promotion) "Invalid move" else if (promotion && !flag) "Promotion" else "")
-
+    if(flag && isMyKingInDanger(state,1-turn)){
+      (state,if(turn%2==0)status.Player_0_turn else status.Player_1_turn,
+        if(!promotion) "Check!" else  "Check! and Promotion:")
+    }
+    else {
+      (state, if (flag) if (turn % 2 == 0) status.Player_0_turn else status.Player_1_turn else status.Invalid,
+        if (!flag && !promotion) "Invalid move" else if (promotion && !flag) "Promotion" else "")
+    }
   }
 
   /*
