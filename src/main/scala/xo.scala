@@ -11,13 +11,13 @@ import scalafx.scene.text.Text
 import scalafx.scene.text.Text.sfxText2jfx
 
 object xo {
-  val xo_BOARDWIDTH = 600;
+  def xo_BOARDWIDTH = 600;
   def xo_initial = Array.fill(3,3)(" ")
-  val xo_click_handler:click_to_move =(x:Double,y:Double)=>{
+  def xo_click_handler:click_to_move =(x:Double,y:Double)=>{
     println(x+" - "+y)
     s"${x.toInt/(xo_BOARDWIDTH/3)} ${y.toInt/(xo_BOARDWIDTH/3)}"
   }
-  val xo_controller: controller = (x: state, in: input, turn: turn) => {
+  def xo_controller: controller = (x: state, in: input, turn: turn) => {
     val getSymbol = (turn: turn) => {
       (turn%2) match {
         case 0 => "x"
@@ -65,7 +65,6 @@ object xo {
         }
       }
     }
-    println(in)
     val sel = in.split(" ")
     val returned = (null, status.Invalid, "invalid square")
     var invalid:Boolean = false;
@@ -99,7 +98,7 @@ object xo {
     }
   }
 
-  val xo_drawer:drawer=
+  def xo_drawer:drawer=
     (x:state)=>{
       val CELLWIDTH = xo_BOARDWIDTH / 3
       var lst: List[Node]= List()
