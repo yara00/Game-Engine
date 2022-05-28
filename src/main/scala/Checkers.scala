@@ -1,5 +1,6 @@
 import Chess.letters
-import definitions.{controller, drawer, input, state,click_to_move}
+import Engine.state
+import definitions.{click_to_move, controller, drawer, input, state, status, turn}
 import scalafx.scene.Node
 import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.paint.Color
@@ -146,9 +147,9 @@ object Checkers {
     println(revertIndex(from.charAt(0).asDigit))
   }
   def revertIndex(x: Int): Int = 8 - x
-  def initState(state: State): State = {
-    var board = state.state
-    state.flag = true
+  def initState(board: state): state = {
+   // var board = state.state
+   // state.flag = true
     for(i <- 0 until(board.length)) {
       for (j <- 0 until (board.length)) {
         if (i < (board.length / 2) -1) {
@@ -164,7 +165,7 @@ object Checkers {
         else board(i)(j) = "-"
       }
     }
-    state
+    board
   }
 
   def convertCharacterToIndex(x: Char) : Int ={
@@ -195,9 +196,9 @@ object Checkers {
     case (1, xf, xt) if xf - xt == 1 => 1
     case _ => 0
   }
-  def forceEat(state: State, turn: Int): ArrayBuffer[String] = {
+  def forceEat(board: state, turn: turn): ArrayBuffer[String] = {
     val legalMoves = ArrayBuffer[String]();;
-    val board = state.state;
+   // val board = state.state;
     val playerPiece = turnMatch(turn)
     val playerKingPiece = "k".concat(playerPiece)
     if (turn == 0) {
@@ -253,9 +254,9 @@ object Checkers {
     false
   }
 
-  def isValidMove(move: String, state: State, turn: Int): Boolean = {
-    val board = state.state;
-    if(!forceEat(state, turn).contains(move.substring(2,4)) && !unitMove(move.charAt(0), move.charAt(2))) {
+  def isValidMove(move: String, board: state, turn: Int): Boolean = {
+   // val board = state.state;
+    if(!forceEat(board, turn).contains(move.substring(2,4)) && !unitMove(move.charAt(0), move.charAt(2))) {
       println("lolo")
       return false
     }
@@ -282,7 +283,7 @@ object Checkers {
     }
     true
   }
-  def controller(move: String, state: State, turn: Int): State = {
+  val Checkers_controller:controller=(board: state,move: input,turn: turn)=>{
     /**
      *
      * 1. validateInput
@@ -292,16 +293,20 @@ object Checkers {
      *
      * returns updatedState to be passed to the drawer function
      */
-    if(!isValidInput(move)) {
-      state.flag = false
-      return state
-    }
     val xf = convertCharacterToIndex(move.charAt(0))
     val yf = move.charAt(1).asDigit
     val xt = convertCharacterToIndex(move.charAt(2))
     val yt = move.charAt(3).asDigit
     var legalMoves = ArrayBuffer[String]()
-    legalMoves = forceEat(state, turn)
+    val playerPiece = turnMatch(turn)
+    val playerKingPiece = ("k".concat(playerPiece))
+    var flag :Boolean=false;
+    if(!isValidInput(move)) {
+      flag = false
+
+    }
+
+    //legalMoves = forceEat(state, turn)
     /* val moveTo: String = move.charAt(2).toString.concat(move.charAt(3).toString)
      for(moves <- legalMoves if !legalMoves.contains(moveTo)) {
        println("lolo")
@@ -309,14 +314,13 @@ object Checkers {
        return state;
      }
  */
-    val playerPiece = turnMatch(turn)
-    val playerKingPiece = "k".concat(playerPiece)
-    val board = state.state
+
+
+ //   val board = state.state
     // moving a wrong piece (color) or from null pos or diagonal move length > 1
     //  val diagonal = (xf - xt).abs;
-    if(!isValidMove(move, state, turn)) {
-      state.flag = false
-      return state
+    else if(!isValidMove(move, board, turn)) {
+     flag = false;
     }
     /*
       if(board(xf)(yf) != playerPiece && board(xf)(yf) != playerKingPiece) {
@@ -324,11 +328,11 @@ object Checkers {
         return state
       };
 */
-    if(board(xf)(yf) != playerKingPiece) {
+    else if(board(xf)(yf) != playerKingPiece) {
       // diagonal movement and to pos is occupied by an opponent/null check
       println("ana hena hehe")
       if(offsetMatch(turn, xf, xt) == 1 && board(xt)(yt) != playerPiece && board(xt)(yt) != playerKingPiece) {
-        state.flag = true;
+       flag = true;
         board(xf)(yf) = "-" // reset from pos
         if (xt == promotionMatch(turn)) board(xt)(yt) = playerKingPiece  // promotion
         else if (board(xt)(yt) != "-") { // eat
@@ -346,12 +350,12 @@ object Checkers {
           board(xt)(yt) = playerPiece
         } // normal move
       }
-      else state.flag = false;
+      else flag = false;
     }
     else { // king piece
       // diagonal movement and to pos is occupied by an opponent/null check
       if(((xt - xf).abs == (yt - yf).abs) && board(xt)(yt) != playerPiece && board(xt)(yt) != playerKingPiece) {
-        state.flag = true;
+        flag = true;
         board(xf)(yf) = "-" // reset from pos
         if (board(xt)(yt) != "-") { // eat
           if (!isOuterEdge(yt)) {
@@ -367,7 +371,7 @@ object Checkers {
       }
     }
     // 2132 5041 3241 6150 5647 2534 4736
-    state
+    (board,if(flag) if(turn%2==0)status.Player_1_turn else status.Player_0_turn else status.Invalid,if(!flag) "Invalid move" else "")
   }
 
   def drawer(): Unit = {
