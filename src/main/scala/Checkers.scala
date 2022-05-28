@@ -10,22 +10,32 @@ import scalafx.scene.text.Text
 import scala.collection.mutable.ArrayBuffer
 
 object Checkers {
-    val checkers_BOARDWIDTH:Int = ???//in pixels
+  def checkers_initial = Array(
+    Array("-","b","-","b","-","b","-","b"),
+    Array("b","-","b","-","b","-","b","-"),
+    Array("-","b","-","b","-","b","-","b"),
+    Array("-","-","-","-","-","-","-","-"),
+    Array("-","-","-","-","-","-","-","-"),
+    Array("w","-","w","-","w","-","w","-"),
+    Array("-","w","-","w","-","w","-","w"),
+    Array("w","-","w","-","w","-","w","-"),
 
+  )
+  val checkers_BOARDWIDTH:Int = 560//in pixels
   val checkers_click_handler:click_to_move = (x:Double, y:Double)=>{
-    val X ='A' + Math.floor(x%(checkers_BOARDWIDTH/8))
-    val Y = 8  - Math.floor(y%(checkers_BOARDWIDTH/8))
-    s"${x}${Y}"
+    val X = ('A'+(x/(checkers_BOARDWIDTH/8)).toInt).toChar
+    val Y = 8 - (y/(checkers_BOARDWIDTH/8)).toInt
+    s"${X.toString}${Y}"
   }
   var texts :List[Text]= List()
   var board: List[Rectangle] = List()
   val checkers_drawer:drawer =  (x:state)=>{
     var lst: List[Node]= List()
     lst = draw_board()
-    for (row <- Range(0, 7)) {
-      for (col <- Range(0, 7)) {
-        if(x(row)(col)!="-" )
-          lst = lst.appended(draw_piece(((8*row)+col),x(row)(col)))
+    for (row <- Range(0, 8)) {
+      for (col <- Range(0, 8)) {
+        if(x(7-row)(7-col)!="-" )
+          lst = lst.appended(draw_piece(((8*col)+row),x(7-row)(7-col)))
       }
     }
     lst
@@ -97,23 +107,68 @@ object Checkers {
         rect.setId(a.toString+ b.toString)
         board = board.appended(rect)
         // content = board
-
       }
       val c = letters(a)
-      val t = new Text(board(board.length-1).x.value+25  ,board(board.length-1).y.value +120,c)
-      t.setStyle("-fx-font: 30 sans-serif;")
-      t.setFill(Color.Black)
+      val t = new Text(board(board.length-1).x.value  ,board(board.length-1).y.value +70,c)
+      t.setStyle("-fx-font: 15 sans-serif;")
+      t.fill = Color(0,0,0,0.7)
       texts= texts.appended(t)
     }
     val i =0;
     for( i <- 1 to 8) {
-      val n = new Text( board((56+(i-1))).x.value + 120  ,board((56+(i-1))).y.value +45 ,(9-i).toString)
-      n.setStyle("-fx-font: 30 sans-serif;")
+      val n = new Text( board((56+(i-1))).x.value +60  ,board((56+(i-1))).y.value+15 ,(9-i).toString)
+      n.setStyle("-fx-font: 15 sans-serif;")
+      n.fill = Color(0,0,0,0.7)
       texts= texts.appended(n)
     }
     lst = board ::: texts
     lst
   }
+//  def draw_board(): List[Node]={
+//    var lst: List[Node]= List()
+//    var a = 0;
+//    var b = 0;
+//    for( a <- 1 to 8){
+//      for( b <- 1 to 8){
+//        val rect = Rectangle(70*(a-1),70*(b-1),70,70)
+//        if(b%2==0) {
+//          if (a % 2 == 0) {
+//            rect.setFill(Color.web("#f0d9b5"))
+//          }
+//          else {
+//            rect.setFill(Color.web("#b58863"))
+//          }
+//        }
+//        else
+//        {
+//          if (a % 2 == 0) {
+//            rect.setFill(Color.web("#b58863"))
+//          }
+//          else {
+//            rect.setFill(Color.web("#f0d9b5"))
+//
+//          }
+//        }
+//        rect.setId(a.toString+ b.toString)
+//        board = board.appended(rect)
+//        // content = board
+//
+//      }
+//      val c = letters(a)
+//      val t = new Text(board(board.length-1).x.value+25  ,board(board.length-1).y.value +120,c)
+//      t.setStyle("-fx-font: 30 sans-serif;")
+//      t.setFill(Color.Black)
+//      texts= texts.appended(t)
+//    }
+//    val i =0;
+//    for( i <- 1 to 8) {
+//      val n = new Text( board((56+(i-1))).x.value + 120  ,board((56+(i-1))).y.value +45 ,(9-i).toString)
+//      n.setStyle("-fx-font: 30 sans-serif;")
+//      texts= texts.appended(n)
+//    }
+//    lst = board ::: texts
+//    lst
+//  }
 
 //  val Checkers_controller:controller=(state,input,turn)=>{
 //    //input form: "x0 y0 x1 y1 "
@@ -283,7 +338,8 @@ object Checkers {
     }
     true
   }
-  val Checkers_controller:controller=(board: state,move: input,turn: turn)=>{
+  def checkers_controller:controller=(board: state,move: input,turn: turn)=> {
+    println(move)
     /**
      *
      * 1. validateInput
@@ -293,21 +349,32 @@ object Checkers {
      *
      * returns updatedState to be passed to the drawer function
      */
-    val xf = convertCharacterToIndex(move.charAt(0))
-    val yf = move.charAt(1).asDigit
-    val xt = convertCharacterToIndex(move.charAt(2))
-    val yt = move.charAt(3).asDigit
-    var legalMoves = ArrayBuffer[String]()
-    val playerPiece = turnMatch(turn)
-    val playerKingPiece = ("k".concat(playerPiece))
-    var flag :Boolean=false;
-    if(!isValidInput(move)) {
-      flag = false
-
+    var flag: Boolean = true;
+    var xf, yf, xt, yt = 0
+    try {
+      xf = convertCharacterToIndex(move.charAt(0))
+      yf = 8 - move.charAt(1).asDigit
+      xt = convertCharacterToIndex(move.charAt(2))
+      yt = 8 - move.charAt(3).asDigit
     }
+    catch {
+      case e: Exception => flag = false
+    }
+    if (!flag) {
+      (board, status.Invalid, "Invalid move")
+    }
+    else {
+      flag = false;
+      var legalMoves = ArrayBuffer[String]()
+      val playerPiece = turnMatch(turn)
+      val playerKingPiece = ("k".concat(playerPiece))
+      if (!isValidInput(move)) {
+        flag = false
 
-    //legalMoves = forceEat(state, turn)
-    /* val moveTo: String = move.charAt(2).toString.concat(move.charAt(3).toString)
+      }
+
+      //legalMoves = forceEat(state, turn)
+      /* val moveTo: String = move.charAt(2).toString.concat(move.charAt(3).toString)
      for(moves <- legalMoves if !legalMoves.contains(moveTo)) {
        println("lolo")
        state.flag = false
@@ -316,82 +383,62 @@ object Checkers {
  */
 
 
- //   val board = state.state
-    // moving a wrong piece (color) or from null pos or diagonal move length > 1
-    //  val diagonal = (xf - xt).abs;
-    else if(!isValidMove(move, board, turn)) {
-     flag = false;
-    }
-    /*
+      //   val board = state.state
+      // moving a wrong piece (color) or from null pos or diagonal move length > 1
+      //  val diagonal = (xf - xt).abs;
+      else if (!isValidMove(move, board, turn)) {
+        flag = false;
+      }
+      /*
       if(board(xf)(yf) != playerPiece && board(xf)(yf) != playerKingPiece) {
         state.flag = false
         return state
       };
 */
-    else if(board(xf)(yf) != playerKingPiece) {
-      // diagonal movement and to pos is occupied by an opponent/null check
-      println("ana hena hehe")
-      if(offsetMatch(turn, xf, xt) == 1 && board(xt)(yt) != playerPiece && board(xt)(yt) != playerKingPiece) {
-       flag = true;
-        board(xf)(yf) = "-" // reset from pos
-        if (xt == promotionMatch(turn)) board(xt)(yt) = playerKingPiece  // promotion
-        else if (board(xt)(yt) != "-") { // eat
-          if (!isOuterEdge(yt)) {
-            if (board(xt + xt - xf)(yt + yt - yf) != "-") board(xt)(yt) = playerPiece
-            else if (board(xt + xt - xf)(yt + yt - yf) == "-") { // jump case
-              board(xt)(yt) = "-"
-              if (xt + xt - xf == promotionMatch(turn)) board(xt + xt - xf)(yt + yt - yf) = playerKingPiece
-              else board(xt + xt - xf)(yt + yt - yf) = playerPiece
+      else if (board(xf)(yf) != playerKingPiece) {
+        // diagonal movement and to pos is occupied by an opponent/null check
+        println("ana hena hehe")
+        if (offsetMatch(turn, xf, xt) == 1 && board(xt)(yt) != playerPiece && board(xt)(yt) != playerKingPiece) {
+          flag = true;
+          board(xf)(yf) = "-" // reset from pos
+          if (xt == promotionMatch(turn)) board(xt)(yt) = playerKingPiece // promotion
+          else if (board(xt)(yt) != "-") { // eat
+            if (!isOuterEdge(yt)) {
+              if (board(xt + xt - xf)(yt + yt - yf) != "-") board(xt)(yt) = playerPiece
+              else if (board(xt + xt - xf)(yt + yt - yf) == "-") { // jump case
+                board(xt)(yt) = "-"
+                if (xt + xt - xf == promotionMatch(turn)) board(xt + xt - xf)(yt + yt - yf) = playerKingPiece
+                else board(xt + xt - xf)(yt + yt - yf) = playerPiece
+              }
             }
+            else board(xt)(yt) = playerPiece;
           }
-          else board(xt)(yt) = playerPiece;
+          else {
+            board(xt)(yt) = playerPiece
+          } // normal move
         }
-        else {
-          board(xt)(yt) = playerPiece
-        } // normal move
+        else flag = false;
       }
-      else flag = false;
-    }
-    else { // king piece
-      // diagonal movement and to pos is occupied by an opponent/null check
-      if(((xt - xf).abs == (yt - yf).abs) && board(xt)(yt) != playerPiece && board(xt)(yt) != playerKingPiece) {
-        flag = true;
-        board(xf)(yf) = "-" // reset from pos
-        if (board(xt)(yt) != "-") { // eat
-          if (!isOuterEdge(yt)) {
-            if (board(xt + xt - xf)(yt + yt - yf) != "-") board(xt)(yt) = playerKingPiece
-            else if (board(xt + xt - xf)(yt + yt - yf) == "-") { // jump case
-              board(xt)(yt) = "-"
-              board(xt + xt - xf)(yt + yt - yf) = playerKingPiece
+      else { // king piece
+        // diagonal movement and to pos is occupied by an opponent/null check
+        if (((xt - xf).abs == (yt - yf).abs) && board(xt)(yt) != playerPiece && board(xt)(yt) != playerKingPiece) {
+          flag = true;
+          board(xf)(yf) = "-" // reset from pos
+          if (board(xt)(yt) != "-") { // eat
+            if (!isOuterEdge(yt)) {
+              if (board(xt + xt - xf)(yt + yt - yf) != "-") board(xt)(yt) = playerKingPiece
+              else if (board(xt + xt - xf)(yt + yt - yf) == "-") { // jump case
+                board(xt)(yt) = "-"
+                board(xt + xt - xf)(yt + yt - yf) = playerKingPiece
+              }
             }
+            else board(xt)(yt) = playerPiece;
           }
-          else board(xt)(yt) = playerPiece;
+          else board(xt)(yt) = playerKingPiece // normal move
         }
-        else board(xt)(yt) = playerKingPiece // normal move
       }
+      // 2132 5041 3241 6150 5647 2534 4736
+      (board, if (flag) if (turn % 2 == 0) status.Player_1_turn else status.Player_0_turn else status.Invalid, if (!flag) "Invalid move" else "")
     }
-    // 2132 5041 3241 6150 5647 2534 4736
-    (board,if(flag) if(turn%2==0)status.Player_1_turn else status.Player_0_turn else status.Invalid,if(!flag) "Invalid move" else "")
-  }
-
-  def drawer(): Unit = {
-
-  }
-}
-object Main2 {
-  def main(args: Array[String]): Unit = {
-  /*  var checkers : Checkers = new Checkers;
-    //checkers.parseInput("lolo")
-    var turn = 1;
-    var state : State = new State(8, 8);
-    state = checkers.initState(state);
-    // state.state(8)(3) = "kb"
-    while(true) {
-      turn = turn ^ 1
-      state.printState()
-      println("Please enter -from- and -to- pos: ");
-      val move = scala.io.StdIn.readLine()
-      checkers.controller(move, state, turn)
-    }*/
   }
 }

@@ -76,7 +76,15 @@ object Engine extends JFXApp3 {
       Engine.stage.scene = generateGameScene();
     }
     ckICON.onMousePressed= (e:Any) => {
-      println("Checkerss")
+      drawer=checkers_drawer
+      controller = checkers_controller
+      dim = 8
+      BOARDWIDTH = checkers_BOARDWIDTH
+      signalingClickCount = 2;
+      state = checkers_initial
+      turn = 0;
+      click_to_move=chess_click_handler
+      Engine.stage.scene = generateGameScene();
     }
     val menuH1 = new HBox(100,xoICON,chICON)
     val menuH2 = new HBox(100,c4ICON,ckICON)
@@ -141,7 +149,6 @@ object Engine extends JFXApp3 {
       val drawState = (drawer: drawer, state: state) => {
         sfxGroup2jfx(ROOT).getChildren.clear()
         (drawer(state)).foreach((x) => {
-          println((x).toString())
           sfxGroup2jfx(ROOT).getChildren.add(x)
         })
       }

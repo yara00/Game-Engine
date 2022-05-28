@@ -541,7 +541,7 @@ object Chess{
     }
 
     (state,if( flag ) if(turn%2==0)status.Player_0_turn else status.Player_1_turn else status.Invalid,
-            if(!flag && !promotion) "Invalid move" else if (promotion) "Promotion" else "")
+            if(!flag && !promotion) "Invalid move" else if (promotion && !flag) "Promotion" else "")
 
   }
 
