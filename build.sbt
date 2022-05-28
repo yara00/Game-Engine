@@ -1,4 +1,4 @@
-name := "GameEngine"
+name := "Game-Engine"
 
 version := "0.1"
 
