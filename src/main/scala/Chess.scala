@@ -2,7 +2,7 @@ import definitions.{click_to_move, controller, drawer, input, state, status, tur
 import scalafx.application.JFXApp3
 import scalafx.geometry.Insets
 import scalafx.scene.text._
-import scalafx.scene.Scene
+import scalafx.scene.{Node, Scene}
 import scalafx.scene.effect.DropShadow
 import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.input.{DragEvent, MouseEvent}
@@ -12,6 +12,7 @@ import scalafx.scene.paint._
 import scalafx.scene.shape.Rectangle
 
 import scala.::
+
 import scala.jdk.CollectionConverters._
 import scala.language.postfixOps
 
@@ -340,6 +341,121 @@ object Chess extends JFXApp3{
     }
 
   }
+
+  val chess_drawer:drawer =  (x:state)=>{
+    var lst: List[Node]= List()
+    lst = draw_board()
+    for (row <- Range(0, 7)) {
+      for (col <- Range(0, 7)) {
+        if(x(row)(col)!="." && x(row)(col)!="-" )
+        lst = lst.appended(draw_piece(((8*row)+col),x(row)(col)))
+      }
+    }
+    lst
+  }
+
+  def draw_wk(n: Int): ImageView = {
+    val WK = new Image("file:assets/wk.png", 70, 70, false, false)
+    val wk = new ImageView(WK)
+    wk.setX(board(n).x.value)
+    wk.setY(board(n).y.value)
+    wk
+  }
+  def draw_wq(n: Int): ImageView = {
+    val WQ = new Image("file:assets/wq.png", 60, 60, true, false)
+    val wq = new ImageView(WQ)
+    wq.setX(board(n).x.value+5)
+    wq.setY(board(n).y.value+5)
+    wq
+  }
+  def draw_wr(n: Int): ImageView = {
+    val WR = new Image("file:assets/wr.png", 60, 60, false, false)
+    val wr = new ImageView(WR)
+    wr.setX(board(n).x.value+5)
+    wr.setY(board(n).y.value+5)
+    wr
+  }
+  def draw_wn(n: Int): ImageView = {
+    val WKn = new Image("file:assets/wkn.png", 60, 60, false, false)
+    val wkn = new ImageView(WKn)
+    wkn.setX(board(n).x.value+5)
+    wkn.setY(board(n).y.value+5)
+    wkn
+  }
+  def draw_wb(n: Int): ImageView = {
+    val WB = new Image("file:assets/wb.png", 70, 70, true, false)
+    val wb = new ImageView(WB)
+    wb.setX(board(n).x.value)
+    wb.setY(board(n).y.value)
+    wb
+  }
+  def draw_wp(n: Int): ImageView = {
+    val WP = new Image("file:assets/wp.png", 50, 50, true, false)
+    val wp = new ImageView(WP)
+    wp.setX(board(n).x.value+13)
+    wp.setY(board(n).y.value+10)
+    wp
+  }
+  ///
+  def draw_bk(n: Int): ImageView = {
+    val BK = new Image("file:assets/bk.png",  55, 55, true, false)
+    val bk = new ImageView(BK)
+    bk.setX(board(n).x.value+5)
+    bk.setY(board(n).y.value+5)
+    bk
+  }
+  def draw_bq(n: Int): ImageView = {
+    val BQ = new Image("file:assets/bq.png",  58, 58, false, false)
+    val bq = new ImageView(BQ)
+    bq.setX(board(n).x.value+5)
+    bq.setY(board(n).y.value+5)
+    bq
+  }
+  def draw_br(n: Int): ImageView = {
+    val BR = new Image("file:assets/br.png",  60, 60, false, false)
+    val br = new ImageView(BR)
+    br.setX(board(n).x.value+5)
+    br.setY(board(n).y.value+5)
+    br
+  }
+  def draw_bn(n: Int): ImageView = {
+    val BKn = new Image("file:assets/bkn.png", 60, 60, false, false)
+    val bkn = new ImageView(BKn)
+    bkn.setX(board(n).x.value+5)
+    bkn.setY(board(n).y.value+5)
+    bkn
+  }
+  def draw_bb(n: Int): ImageView = {
+    val BB = new Image("file:assets/bb.png",  50, 50, true, false)
+    val bb = new ImageView(BB)
+    bb.setX(board(n).x.value+9)
+    bb.setY(board(n).y.value+9)
+    bb
+  }
+  def draw_bp(n: Int): ImageView = {
+    val BP = new Image("file:assets/bp.png",  60, 60, true, false)
+    val bp = new ImageView(BP)
+    bp.setX(board(n).x.value+5)
+    bp.setY(board(n).y.value+5)
+    bp
+  }
+  def draw_piece(n:Int, s:String) : ImageView ={
+    s match {
+      case "k"  =>return draw_wk(n)
+      case "q"  =>return draw_wq(n)
+      case "r"  =>return draw_wr(n)
+      case "n"  =>return draw_wn(n)
+      case "b"  =>return draw_wb(n)
+      case "p"  =>return draw_wp(n)
+      case "K"  =>return draw_bk(n)
+      case "Q"  =>return draw_bq(n)
+      case "R"  =>return draw_br(n)
+      case "N"  =>return draw_bn(n)
+      case "B"  =>return draw_bb(n)
+      case "p"  =>return draw_bp(n)
+    }
+
+  }
   val chess_controller:controller = ( state: state,move: String, turn: Int)=> {
     var index= new Array[Int](4);
     println(move)
@@ -378,6 +494,7 @@ object Chess extends JFXApp3{
     (state,if(flag) if(turn%2==0)status.Player_1_turn else status.Player_0_turn else status.Invalid,if(!flag) "Invalid move" else "")
   }
 
+  /*
   val WK = new Image("file:assets/wk.png", 70, 70, false, false)
   val WQ = new Image("file:assets/wq.png", 60, 60, true, false)
   val WB = new Image("file:assets/wb.png", 70, 70, true, false)
@@ -398,66 +515,63 @@ object Chess extends JFXApp3{
   val BKn = new Image("file:assets/bkn.png", 60, 60, false, false)
   val BR = new Image("file:assets/br.png",  60, 60, false, false)
   val BP = new Image("file:assets/bp.png",  60, 60, true, false)
+  */
 
-  val board_Map = Map("a8" -> 0 , "a7" -> 1 , "a6" -> 2, "a5" -> 3, "a4" -> 4, "a3" -> 5, "a2" -> 6, "a1" -> 7,
-    "b8" -> 8, "b7" -> 9, "b6" -> 10, "b5" -> 11    , "b4" -> 12  , "b3" -> 13  , "b2" -> 14  , "b1" -> 15,
-    "c8" -> 16, "c7" -> 17, "c6" -> 18, "c5" -> 19    , "c4" -> 20  , "c3" -> 21  , "c2" -> 22  , "c1" -> 23,
-    "d8" -> 24, "d7" -> 25, "d6" -> 26, "d5" -> 27    , "d4" -> 28  , "d3" -> 29  , "d2" -> 30  , "d1" -> 31,
-    "e8" -> 32, "e7" -> 33, "e6" -> 34, "e5" -> 35   , "e4" -> 36  , "e3" -> 37  , "e2" -> 38  , "e1" -> 39,
-    "f8" -> 40, "f7" -> 41, "f6" -> 42, "f5" -> 43    , "f4" -> 44  , "f3" -> 45 , "f2" -> 46  , "f1" -> 47,
-    "g8" -> 48, "g7" -> 49, "g6" -> 50, "g5" -> 51    , "g4" -> 52  , "g3" -> 53  , "g2" -> 54  , "g1" -> 55,
-    "h8" -> 56, "h7" -> 57, "h6" -> 58, "h5" -> 59    , "h4" -> 60  , "h3" ->61   , "h2" -> 62  , "h1" -> 63,
-  )
-  def pic_Map = Map("k"->new ImageView(BK),"K"->new ImageView(BK),"n"->new ImageView(BKn),"N"->new ImageView(WKn))
   var texts :List[Text]= List()
   var board: List[Rectangle] = List()
   var pieces: List[ImageView] = List()
 
+  def draw_board(): List[Node]={
+    var lst: List[Node]= List()
+    var a = 0;
+    var b = 0;
+    for( a <- 1 to 8){
+      for( b <- 1 to 8){
+        val rect = Rectangle(70*(a-1),70*(b-1),70,70)
+        if(b%2==0) {
+          if (a % 2 == 0) {
+            rect.setFill(Color.web("#f0d9b5"))
+          }
+          else {
+            rect.setFill(Color.web("#b58863"))
+          }
+        }
+        else
+        {
+          if (a % 2 == 0) {
+            rect.setFill(Color.web("#b58863"))
+          }
+          else {
+            rect.setFill(Color.web("#f0d9b5"))
+
+          }
+        }
+        rect.setId(a.toString+ b.toString)
+        board = board.appended(rect)
+        // content = board
+
+      }
+      val c = letters(a)
+      val t = new Text(board(board.length-1).x.value+25  ,board(board.length-1).y.value +120,c)
+      t.setStyle("-fx-font: 30 sans-serif;")
+      t.setFill(Color.Black)
+      texts= texts.appended(t)
+    }
+    val i =0;
+    for( i <- 1 to 8) {
+      val n = new Text( board((56+(i-1))).x.value + 120  ,board((56+(i-1))).y.value +45 ,(9-i).toString)
+      n.setStyle("-fx-font: 30 sans-serif;")
+      texts= texts.appended(n)
+    }
+    lst = board ::: texts
+    lst
+  }
   override def start(): Unit = {
     stage = new JFXApp3.PrimaryStage {
       scene = new Scene(800, 800) {
         fill = Grey
-        var a = 0;
-        var b = 0;
-        for( a <- 1 to 8){
-          for( b <- 1 to 8){
-          val rect = Rectangle(70*(a-1),70*(b-1),70,70)
-            if(b%2==0) {
-              if (a % 2 == 0) {
-                rect.setFill(Color.web("#f0d9b5"))
-              }
-              else {
-                rect.setFill(Color.web("#b58863"))
-              }
-            }
-            else
-              {
-                if (a % 2 == 0) {
-                  rect.setFill(Color.web("#b58863"))
-                }
-                else {
-                  rect.setFill(Color.web("#f0d9b5"))
 
-                }
-              }
-              rect.setId(a.toString+ b.toString)
-              board = board.appended(rect)
-              // content = board
-
-          }
-          val c = letters(a)
-          val t = new Text(board(board.length-1).x.value+25  ,board(board.length-1).y.value +120,c)
-          t.setStyle("-fx-font: 30 sans-serif;")
-          t.setFill(Color.Black)
-         texts= texts.appended(t)
-        }
-        val i =0;
-        for( i <- 1 to 8) {
-          val n = new Text( board((56+(i-1))).x.value + 120  ,board((56+(i-1))).y.value +45 ,(9-i).toString)
-          n.setStyle("-fx-font: 30 sans-serif;")
-          texts= texts.appended(n)
-        }
-        content =  board ::: texts ::: WhiteQ()
+        content =  board ::: texts
       }
     }
   }
@@ -473,6 +587,15 @@ object Chess extends JFXApp3{
       case 8  =>return "H"
     }
   }
+ /* val board_Map = Map("a8" -> 0 , "a7" -> 1 , "a6" -> 2, "a5" -> 3, "a4" -> 4, "a3" -> 5, "a2" -> 6, "a1" -> 7,
+    "b8" -> 8, "b7" -> 9, "b6" -> 10, "b5" -> 11    , "b4" -> 12  , "b3" -> 13  , "b2" -> 14  , "b1" -> 15,
+    "c8" -> 16, "c7" -> 17, "c6" -> 18, "c5" -> 19    , "c4" -> 20  , "c3" -> 21  , "c2" -> 22  , "c1" -> 23,
+    "d8" -> 24, "d7" -> 25, "d6" -> 26, "d5" -> 27    , "d4" -> 28  , "d3" -> 29  , "d2" -> 30  , "d1" -> 31,
+    "e8" -> 32, "e7" -> 33, "e6" -> 34, "e5" -> 35   , "e4" -> 36  , "e3" -> 37  , "e2" -> 38  , "e1" -> 39,
+    "f8" -> 40, "f7" -> 41, "f6" -> 42, "f5" -> 43    , "f4" -> 44  , "f3" -> 45 , "f2" -> 46  , "f1" -> 47,
+    "g8" -> 48, "g7" -> 49, "g6" -> 50, "g5" -> 51    , "g4" -> 52  , "g3" -> 53  , "g2" -> 54  , "g1" -> 55,
+    "h8" -> 56, "h7" -> 57, "h6" -> 58, "h5" -> 59    , "h4" -> 60  , "h3" ->61   , "h2" -> 62  , "h1" -> 63,
+  )
   def WhiteQ(): List[ImageView] = {
     var pieces: List[ImageView] = List()
 
@@ -583,5 +706,5 @@ object Chess extends JFXApp3{
           pieces.appended(wr2)  :::pieces.appended(wr1) :::pieces.appended(wkn1):::pieces.appended(wkn2) ::: pieces.appended(bk) ::: pieces.appended(bq)::: pieces.appended(bb1) ::: pieces.appended(bb2)  :::
       pieces.appended(br2)  :::pieces.appended(br1) :::pieces.appended(bkn1):::pieces.appended(bkn2)
     pieces
-  }
+  }*/
 }
