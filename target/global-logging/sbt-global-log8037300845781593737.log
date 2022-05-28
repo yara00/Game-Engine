@@ -1,0 +1,17 @@
+[debug] > Exec(universal:packageBin, None, None)
+[debug] Evaluating tasks: Universal / packageBin
+[warn] sbt 0.13 shell syntax is deprecated; use slash syntax instead: Universal / packageBin
+[debug] Running task... Cancel: Signal, check cycles: false, forcegc: true
+[info] Wrote C:\Users\Dell\Desktop\GameEngine\target\scala-2.13\gameengine_2.13-0.1.pom
+[info] Main Scala API documentation to C:\Users\Dell\Desktop\GameEngine\target\scala-2.13\api...
+[warn] multiple main classes detected: run 'show discoveredMainClasses' to see the list
+[warn] C:\Users\Dell\Desktop\GameEngine\src\main\scala\Engine.scala:73:15: Auto-application to `()` is deprecated. Supply the empty argument list `()` explicitly to invoke method chess_initial,
+[warn] or remove the empty argument list from its definition (Java-defined methods are exempt).
+[warn] In Scala 3, an unapplied method like this will be eta-expanded into a function.
+[warn]       state = chess_initial
+[warn]               ^
+[warn] one warning found
+[info] Main Scala API documentation successful.
+[success] All package validations passed
+[success] Total time: 5 s, completed May 28, 2022, 8:27:29 PM
+[debug] > Exec(idea-shell, None, None)

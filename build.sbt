@@ -14,7 +14,11 @@ mainClass := Some("hello.ScalaFXHelloWorld")
 
 // Fork a new JVM for 'run' and 'test:run', to avoid JavaFX double initialization problems
 fork := true
-
+maintainer := "NAME <example@example.com>"
+packageSummary := "PROJECT_NAME"
+packageDescription := """PROJECT_DESCRIPTION."""
+wixProductId := "ce07be71-510d-414a-92d4-dff47631848q"
+wixProductUpgradeId := "4552fb0e-e257-4dbd-9ecb-dba9dbacf42x"
 // Add JavaFX dependencies
 libraryDependencies ++= {
   // Determine OS version of JavaFX binaries
@@ -27,3 +31,4 @@ libraryDependencies ++= {
   Seq("base", "controls", "fxml", "graphics", "media", "swing", "web")
     .map(m => "org.openjfx" % s"javafx-$m" % "18.0.1" classifier osName)
 }
+enablePlugins(JavaAppPackaging)

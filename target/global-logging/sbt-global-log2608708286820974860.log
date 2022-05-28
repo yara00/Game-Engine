@@ -1,0 +1,39 @@
+[debug] > Exec(universal:packageBin, None, None)
+[debug] Evaluating tasks: Universal / packageBin
+[warn] sbt 0.13 shell syntax is deprecated; use slash syntax instead: Universal / packageBin
+[debug] Running task... Cancel: Signal, check cycles: false, forcegc: true
+[info] Wrote C:\Users\Dell\Desktop\GameEngine\target\scala-2.13\gameengine_2.13-0.1.pom
+[info] Main Scala API documentation to C:\Users\Dell\Desktop\GameEngine\target\scala-2.13\api...
+[info] compiling 11 Scala sources to C:\Users\Dell\Desktop\GameEngine\target\scala-2.13\classes ...
+[info] Non-compiled module 'compiler-bridge_2.13' for Scala 2.13.8. Compiling...
+[info]   Compilation completed in 15.696s.
+[warn] C:\Users\Dell\Desktop\GameEngine\src\main\scala\Engine.scala:73:15: Auto-application to `()` is deprecated. Supply the empty argument list `()` explicitly to invoke method chess_initial,
+[warn] or remove the empty argument list from its definition (Java-defined methods are exempt).
+[warn] In Scala 3, an unapplied method like this will be eta-expanded into a function.
+[warn]       state = chess_initial
+[warn]               ^
+[warn] C:\Users\Dell\Desktop\GameEngine\src\main\scala\Engine.scala:73:15: Auto-application to `()` is deprecated. Supply the empty argument list `()` explicitly to invoke method chess_initial,
+[warn] or remove the empty argument list from its definition (Java-defined methods are exempt).
+[warn] In Scala 3, an unapplied method like this will be eta-expanded into a function.
+[warn]       state = chess_initial
+[warn]               ^
+[warn] C:\Users\Dell\Desktop\GameEngine\src\main\scala\Chess.scala:290:34: method any2stringadd in object Predef is deprecated (since 2.13.0): Implicit injection of + is deprecated. Convert to String to call +
+[warn]           print(generalValidation(Array(i,j,kingPosx,kingPosy),1-turn,board)+", ")
+[warn]                                  ^
+[warn] C:\Users\Dell\Desktop\GameEngine\src\main\scala\ChessController.scala:361:25: method + in class Int is deprecated (since 2.13.0): Adding a number and a String is deprecated. Use the string interpolation `s"$num$str"`
+[warn]        println(index(0) + " " + index(1) + " " + index(2) + " " + index(3))
+[warn]                         ^
+[warn] C:\Users\Dell\Desktop\GameEngine\src\main\scala\Engine.scala:184:38: method + in class Int is deprecated (since 2.13.0): Adding a number and a String is deprecated. Use the string interpolation `s"$num$str"`
+[warn]           println(key.getCode.getCode+": unhandled key press")
+[warn]                                      ^
+[warn] C:\Users\Dell\Desktop\GameEngine\src\main\scala\xo.scala:17:14: method + in class Double is deprecated (since 2.13.0): Adding a number and a String is deprecated. Use the string interpolation `s"$num$str"`
+[warn]     println(x+" - "+y)
+[warn]              ^
+[warn] one warning found
+[info] Main Scala API documentation successful.
+[warn] 5 warnings found
+[info] done compiling
+[warn] multiple main classes detected: run 'show discoveredMainClasses' to see the list
+[success] All package validations passed
+[success] Total time: 30 s, completed May 28, 2022, 8:27:24 PM
+[debug] > Exec(idea-shell, None, None)
