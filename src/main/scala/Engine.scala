@@ -126,7 +126,7 @@ object Engine extends JFXApp3 {
       //vars and vals engine related
       val t = new TextField()
       val tt = new Text(){
-        this.text = ">>Welcome to GameBuddy ... First Player's turn:"
+        this.text = s"turn: ${turn+1} "+">>Welcome to GameBuddy ... First Player's turn:"
         this.layoutX = 0
         this.layoutY = BOARDWIDTH+TEXTFIELDHEIGHT-4
         this.stroke = Blue
@@ -161,7 +161,7 @@ object Engine extends JFXApp3 {
           case Draw => System.out.println("Draw");drawState(drawer, state);
           case _ => System.out.println(s"UNHANDLED CASE!");
         }
-        tt.setText(inputresult._3)
+        tt.setText(s"turn: ${turn+1} "+inputresult._3)
       }
       this.onKeyPressed = (key)=>{
         if(key.getCode.isWhitespaceKey){
