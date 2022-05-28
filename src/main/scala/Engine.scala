@@ -150,10 +150,12 @@ object Engine extends JFXApp3 {
       def processInput(in:String)={
         clickcount.value = 0;
         val inputresult = controller(state, in, turn%2);
-        inputBuffer.value = ""
+        val l = click_to_move(1,1).length
         val res = inputresult._2
+        val oldinputBuffer= inputBuffer.value
+        inputBuffer.value =""
         res match {
-          case Invalid => System.out.println("INVALID");
+          case Invalid => System.out.println("INVALID");inputBuffer.value = oldinputBuffer.takeRight(l)
           case Player_0_turn => state = inputresult._1; turn += 1; drawState(drawer, state);
           case Player_1_turn => state = inputresult._1; turn += 1; drawState(drawer, state);
           case Player_0_won => println("X won");drawState(drawer, state);turn=0
@@ -180,7 +182,8 @@ object Engine extends JFXApp3 {
 //        val y = Math.floor(ev.getSceneY / (BOARDWIDTH / dim))
         inputBuffer.value += (click_to_move(ev.getSceneX,ev.getSceneY))
         clickcount.value +=1;
-        if (clickcount.value == signalingClickCount) {
+        val l = click_to_move(1,1).length
+        if (clickcount.value == signalingClickCount|| inputBuffer.value.length==l*signalingClickCount) {
           processInput(inputBuffer.value)
         };
       }
