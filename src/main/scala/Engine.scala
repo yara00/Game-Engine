@@ -139,8 +139,9 @@ object Engine extends JFXApp3 {
       var ROOT = new Group();
       content = List(ROOT,t,tt);
       val drawState = (drawer: drawer, state: state) => {
-        sfxGroup2jfx(ROOT).getChildren.removeAll();
+        sfxGroup2jfx(ROOT).getChildren.clear()
         (drawer(state)).foreach((x) => {
+          println((x).toString())
           sfxGroup2jfx(ROOT).getChildren.add(x)
         })
       }

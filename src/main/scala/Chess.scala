@@ -16,7 +16,7 @@ import scala.::
 import scala.jdk.CollectionConverters._
 import scala.language.postfixOps
 
-object Chess extends JFXApp3{
+object Chess{
   def chess_BOARDWIDTH = 560
   def chess_initial () : state = Array(
     Array("R", "N", "B","Q","K","B","N","R"),
@@ -30,7 +30,7 @@ object Chess extends JFXApp3{
   )
   def chess_click_handler:click_to_move =(x:Double,y:Double)=>{
     val X = ('A'+(x/(chess_BOARDWIDTH/8)).toInt).toChar
-    val Y = (9 - (y/(chess_BOARDWIDTH/8)).toInt)
+    val Y = 8 - (y/(chess_BOARDWIDTH/8)).toInt
     s"${X.toString}${Y}"
   }
   def promotedpiece (turn : Int) : String = {
@@ -523,13 +523,6 @@ object Chess extends JFXApp3{
   var pieces: List[ImageView] = List()
 
   def draw_board(): List[Node]={
-    val back = new Rectangle(){
-      this.layoutX = 0
-      this.layoutY = 0
-      this.width = chess_BOARDWIDTH
-      this.height = chess_BOARDWIDTH
-      this.fill = LinearGradient(0,590,chess_BOARDWIDTH,chess_BOARDWIDTH,true,CycleMethod.Repeat,List(Stop(0.3,Grey),Stop(0.7,Magenta)))
-    };
     var lst: List[Node]= List()
     var a = 0;
     var b = 0;
@@ -571,17 +564,8 @@ object Chess extends JFXApp3{
       n.fill = Color(0,0,0,0.7)
       texts= texts.appended(n)
     }
-    lst = back::board ::: texts
+    lst = board ::: texts
     lst
-  }
-  override def start(): Unit = {
-    stage = new JFXApp3.PrimaryStage {
-      scene = new Scene(800, 800) {
-        fill = Grey
-
-        content =  board ::: texts
-      }
-    }
   }
   def letters(n:Int): String ={
     n match{
