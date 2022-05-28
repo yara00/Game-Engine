@@ -54,6 +54,25 @@ object Chess{
     }
   }
 
+  def canPrometed (turn : Int , board : state) : Boolean = {
+   var found : Boolean = false
+    if(turn == 0){        // white
+      for( i<-0 until 8){
+        if(board(0)(i) == "p"){
+          found = true
+        }
+      }
+      found
+    }else{
+      for( i<-0 until 8){
+        if(board(7)(i) == "P"){
+          found = true
+        }
+      }
+      found
+    }
+  }
+
   def checkPromotion (turn : Int , board : state) : state = {
     var y_pos = -1
 
@@ -61,13 +80,10 @@ object Chess{
       for(i <- 0 until 8) {
         if (board(0)(i) == "p") {
           y_pos = i
-
         }
       }
       println(y_pos)
       if(y_pos != -1) {
-        //        println("Your pawn can be promoted choose a piece")
-        //        val piece = scala.io.StdIn.readLine()
         val piece = promotedpiece(turn)
         println("your piece is >> " + piece)
         board(0)(y_pos) = piece
@@ -83,8 +99,6 @@ object Chess{
 
       println(y_pos)
       if(y_pos != -1){
-        //        println("Your pawn can be promoted choose a piece")
-        //        val piece = scala.io.StdIn.readLine()
         val piece = promotedpiece(turn)
         println("your piece is >> " + piece)
         board(7)(y_pos) = piece
@@ -480,7 +494,11 @@ object Chess{
       if(generalValidation(index,turn,state) && moveValidation(index,turn,state)){
         println("validatiiiion done")
         moveGenerate(index,state)
-        checkPromotion(turn,state)
+
+        if(canPrometed(turn , state)){
+          canPrometed(turn,state)
+        }
+        
         flag = true
       }else{
         println("not valid")
