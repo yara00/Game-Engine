@@ -1,0 +1,32 @@
+[info] Main Scala API documentation to C:\Users\Dell\Desktop\GameEngine\target\scala-2.13\api...
+[debug] Getting org.scala-sbt:compiler-bridge_2.13:1.6.0:compile for Scala 2.13.8
+[debug] Calling Scaladoc with arguments:
+[debug] 	-d
+[debug] 	C:\Users\Dell\Desktop\GameEngine\target\scala-2.13\api
+[debug] 	-unchecked
+[debug] 	-deprecation
+[debug] 	-encoding
+[debug] 	utf8
+[debug] 	-feature
+[debug] 	-bootclasspath
+[debug] 	C:\Users\Dell\AppData\Local\Coursier\Cache\v1\https\repo1.maven.org\maven2\org\scala-lang\scala-library\2.13.8\scala-library-2.13.8.jar
+[debug] 	-classpath
+[debug] 	C:\Users\Dell\AppData\Local\Coursier\Cache\v1\https\repo1.maven.org\maven2\org\scalafx\scalafx_2.13\18.0.1-R27\scalafx_2.13-18.0.1-R27.jar;C:\Users\Dell\AppData\Local\Coursier\Cache\v1\https\repo1.maven.org\maven2\org\openjfx\javafx-base\18.0.1\javafx-base-18.0.1-win.jar;C:\Users\Dell\AppData\Local\Coursier\Cache\v1\https\repo1.maven.org\maven2\org\openjfx\javafx-controls\18.0.1\javafx-controls-18.0.1-win.jar;C:\Users\Dell\AppData\Local\Coursier\Cache\v1\https\repo1.maven.org\maven2\org\openjfx\javafx-fxml\18.0.1\javafx-fxml-18.0.1-win.jar;C:\Users\Dell\AppData\Local\Coursier\Cache\v1\https\repo1.maven.org\maven2\org\openjfx\javafx-graphics\18.0.1\javafx-graphics-18.0.1-win.jar;C:\Users\Dell\AppData\Local\Coursier\Cache\v1\https\repo1.maven.org\maven2\org\openjfx\javafx-media\18.0.1\javafx-media-18.0.1-win.jar;C:\Users\Dell\AppData\Local\Coursier\Cache\v1\https\repo1.maven.org\maven2\org\openjfx\javafx-swing\18.0.1\javafx-swing-18.0.1-win.jar;C:\Users\Dell\AppData\Local\Coursier\Cache\v1\https\repo1.maven.org\maven2\org\openjfx\javafx-web\18.0.1\javafx-web-18.0.1-win.jar;C:\Users\Dell\AppData\Local\Coursier\Cache\v1\https\repo1.maven.org\maven2\org\scala-lang\scala-reflect\2.13.8\scala-reflect-2.13.8.jar;C:\Users\Dell\AppData\Local\Coursier\Cache\v1\https\repo1.maven.org\maven2\org\openjfx\javafx-graphics\18.0.1\javafx-graphics-18.0.1.jar;C:\Users\Dell\AppData\Local\Coursier\Cache\v1\https\repo1.maven.org\maven2\org\openjfx\javafx-controls\18.0.1\javafx-controls-18.0.1.jar;C:\Users\Dell\AppData\Local\Coursier\Cache\v1\https\repo1.maven.org\maven2\org\openjfx\javafx-base\18.0.1\javafx-base-18.0.1.jar;C:\Users\Dell\AppData\Local\Coursier\Cache\v1\https\repo1.maven.org\maven2\org\openjfx\javafx-media\18.0.1\javafx-media-18.0.1.jar
+[debug] 	C:/Users/Dell/Desktop/GameEngine/src/main/scala/Checkers.scala
+[debug] 	C:/Users/Dell/Desktop/GameEngine/src/main/scala/Chess.scala
+[debug] 	C:/Users/Dell/Desktop/GameEngine/src/main/scala/ChessController.scala
+[debug] 	C:/Users/Dell/Desktop/GameEngine/src/main/scala/Connect4.scala
+[debug] 	C:/Users/Dell/Desktop/GameEngine/src/main/scala/definitions.scala
+[debug] 	C:/Users/Dell/Desktop/GameEngine/src/main/scala/DemoMain.scala
+[debug] 	C:/Users/Dell/Desktop/GameEngine/src/main/scala/Engine.scala
+[debug] 	C:/Users/Dell/Desktop/GameEngine/src/main/scala/HelloStageDemo.scala
+[debug] 	C:/Users/Dell/Desktop/GameEngine/src/main/scala/Main.scala
+[debug] 	C:/Users/Dell/Desktop/GameEngine/src/main/scala/State.scala
+[debug] 	C:/Users/Dell/Desktop/GameEngine/src/main/scala/xo.scala
+[warn] C:\Users\Dell\Desktop\GameEngine\src\main\scala\Engine.scala:73:15: Auto-application to `()` is deprecated. Supply the empty argument list `()` explicitly to invoke method chess_initial,
+[warn] or remove the empty argument list from its definition (Java-defined methods are exempt).
+[warn] In Scala 3, an unapplied method like this will be eta-expanded into a function.
+[warn]       state = chess_initial
+[warn]               ^
+[warn] one warning found
+[info] Main Scala API documentation successful.
