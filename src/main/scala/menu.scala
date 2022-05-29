@@ -1,7 +1,8 @@
 import Checkers.{checkers_BOARDWIDTH, checkers_click_handler, checkers_controller, checkers_drawer, checkers_initial}
 import Chess.{chess_BOARDWIDTH, chess_click_handler, chess_controller, chess_drawer, chess_initial}
 import Connect4.{connect4_BOARDWIDTH, connect4_click_handler, connect4_controller, connect4_drawer, connect4_initial}
-import Engine.{generateGameScene}
+import Engine.generateGame
+import scalafx.application.JFXApp3
 import scalafx.scene.Group.sfxGroup2jfx
 import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.{Group, Scene}
@@ -10,7 +11,7 @@ import xo.{xo_BOARDWIDTH, xo_click_handler, xo_controller, xo_drawer, xo_initial
 
 import scala.sys.exit
 
-object menu {
+object menu extends JFXApp3{
   def getBackground(): ImageView ={
     val img = new Image("file:assets/background.png",600,600,true,true)
     val imageView = new ImageView(img)
@@ -51,16 +52,16 @@ object menu {
     val ckICON= getIconCheckers()
 
     xoICON.onMousePressed = (e)=>{
-      Engine.stage.scene = generateGameScene(xo_drawer,xo_controller,3,xo_BOARDWIDTH,1,xo_initial,xo_click_handler);
+      stage.scene = generateGame(xo_drawer,xo_controller,3,xo_BOARDWIDTH,1,xo_initial,xo_click_handler);
     }
     c4ICON.onMousePressed= (e:Any) => {
-      Engine.stage.scene = generateGameScene(connect4_drawer,connect4_controller,7,connect4_BOARDWIDTH,1,connect4_initial,connect4_click_handler);
+      stage.scene = generateGame(connect4_drawer,connect4_controller,7,connect4_BOARDWIDTH,1,connect4_initial,connect4_click_handler);
     }
     chICON.onMousePressed= (e:Any) => {
-      Engine.stage.scene = generateGameScene(chess_drawer,chess_controller,8,chess_BOARDWIDTH,2,chess_initial,chess_click_handler);
+      stage.scene = generateGame(chess_drawer,chess_controller,8,chess_BOARDWIDTH,2,chess_initial,chess_click_handler);
     }
     ckICON.onMousePressed= (e:Any) => {
-      Engine.stage.scene = generateGameScene(checkers_drawer,checkers_controller,8,checkers_BOARDWIDTH,2,checkers_initial,checkers_click_handler);
+      stage.scene = generateGame(checkers_drawer,checkers_controller,8,checkers_BOARDWIDTH,2,checkers_initial,checkers_click_handler);
     }
     val menuH1 = new HBox(100,xoICON,chICON)
     val menuH2 = new HBox(100,c4ICON,ckICON)
@@ -74,5 +75,12 @@ object menu {
         exit()
       }
     }
+  }
+  override def start(): Unit = {
+    stage = new JFXApp3.PrimaryStage {
+      title = "GameBuddy"
+      scene = MenuScene
+    }
+    stage.setResizable(false)
   }
 }

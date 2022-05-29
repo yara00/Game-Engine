@@ -1,5 +1,5 @@
-import definitions.status.status
-import definitions.{click_to_move, controller, drawer, input, state, status, turn}
+import Engine.status.status
+import Engine.{click_to_move, controller, drawer, input, state, status, turn}
 import javafx.scene.shape.StrokeLineJoin
 import scalafx.scene.Node
 import scalafx.scene.effect.Glow

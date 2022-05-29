@@ -1,6 +1,6 @@
 import Chess.letters
 import Engine.state
-import definitions.{click_to_move, controller, drawer, input, state, status, turn}
+import Engine.{click_to_move, controller, drawer, input, state, status, turn}
 import scalafx.scene.Node
 import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.paint.Color

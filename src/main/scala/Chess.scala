@@ -1,4 +1,4 @@
-import definitions.{click_to_move, controller, drawer, input, state, status, turn}
+import Engine.{click_to_move, controller, drawer, input, state, status, turn}
 import scalafx.application.JFXApp3
 import scalafx.geometry.Insets
 import scalafx.scene.text._

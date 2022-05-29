@@ -1,5 +1,5 @@
-import definitions.status.{Invalid, status}
-import definitions.{click_to_move, controller, drawer, input, state, status, turn}
+import Engine.status.{Invalid, status}
+import Engine.{click_to_move, controller, drawer, input, state, status, turn}
 import javafx.scene.shape.StrokeLineJoin
 import scalafx.scene.Node
 import scalafx.scene.paint.Color.{Black, Blue, Brown, Burlywood, CadetBlue, Chocolate, DarkBlue, DarkCyan, DarkKhaki, DarkMagenta, DarkOliveGreen, DarkSalmon, DarkViolet, Goldenrod, Green, IndianRed, LavenderBlush, LightBlue, LightCyan, LightPink, LimeGreen, Magenta, MediumBlue, OrangeRed, Pink, PowderBlue, Red, White}

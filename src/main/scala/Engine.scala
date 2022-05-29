@@ -1,36 +1,46 @@
-import Chess._
-import Connect4._
-import xo._
-import Checkers._
-import definitions.{click_to_move, controller, drawer, state, _}
-import definitions.status._
 import javafx.geometry.Insets
 import javafx.scene.layout.{Background, BackgroundFill, CornerRadii}
-import javafx.scene.paint.{Color, Paint}
-import menu.MenuScene
-import scalafx.application.JFXApp3
+import javafx.scene.paint.Color
 import scalafx.beans.property.{IntegerProperty, StringProperty}
 import scalafx.scene.Group.sfxGroup2jfx
+import scalafx.scene.control.TextField
 import scalafx.scene.control.TextField.sfxTextField2jfx
-import scalafx.scene.control.{Button, TextField}
-import scalafx.scene.image.{Image, ImageView}
-import scalafx.scene.layout.{HBox, VBox}
-import scalafx.scene.paint.Color._
+import scalafx.scene.paint.Color.Blue
 import scalafx.scene.text.{Font, Text}
 import scalafx.scene.{Group, Node, Scene}
 
 import scala.language.postfixOps
-import scala.sys.exit
 
+object Engine{
 
-object Engine extends JFXApp3 {
-  def generateGameScene:(drawer,controller,Int,Int,Int,state,click_to_move)=>Scene =(drawer,controller,dim,BoardWidth,click_count,state_init,click_to_move)=>{
+  object status extends Enumeration{
+    type status = Value
+    //for move:
+    val Invalid: status.Value = Value(">>Invalid")
+    //for game and turns
+    //running
+    val Player_0_turn: status.Value = Value(">>First Player's turn:")
+    val Player_1_turn: status.Value = Value(">>Second Player's turn:")
+    //ended
+    val Player_0_won: status.Value = Value(">>First Player Won!")
+    val Player_1_won: status.Value = Value(">>Second Player Won!")
+    val Draw: status.Value = Value(">>Draw")
+  }
+  type input = String
+  type turn = Int
+  type state = Array[Array[String]]
+  type drawable = List[Node]
+  type drawer = state =>drawable
+  type controller = (state,input,turn)=>(state,status.status,String)
+  type click_to_move = (Double,Double)=>input
+
+  def generateGame:(drawer,controller,Int,Int,Int,state,click_to_move)=>Scene =(drawerr,controllerr,dime,BoardWidth,click_count,state_init,click_to_movee)=>{
     var state=state_init;
     val signalingClickCount=click_count
-    val dim=dim
-    val click_to_move: click_to_move = click_to_move
-    val drawer: drawer = drawer
-    val controller: controller = controller
+    val dim=dime
+    val click_to_move: click_to_move = click_to_movee
+    val drawer: drawer = drawerr
+    val controller: controller = controllerr
     val BOARDWIDTH:Int=BoardWidth
     var turn=0
     def TEXTFIELDHEIGHT = 20
@@ -68,12 +78,12 @@ object Engine extends JFXApp3 {
         val oldinputBuffer= inputBuffer.value
         inputBuffer.value =""
         res match {
-          case Invalid => System.out.println("INVALID");inputBuffer.value = oldinputBuffer.takeRight(l*(signalingClickCount-1)) ; drawState(drawer, state);
-          case Player_0_turn => state = inputresult._1; turn += 1; drawState(drawer, state);
-          case Player_1_turn => state = inputresult._1; turn += 1; drawState(drawer, state);
-          case Player_0_won => println("X won");drawState(drawer, state);turn=0
-          case Player_1_won => println("O won");drawState(drawer, state);turn=1
-          case Draw => System.out.println("Draw");drawState(drawer, state);
+          case status.Invalid => System.out.println("INVALID");inputBuffer.value = oldinputBuffer.takeRight(l*(signalingClickCount-1)) ; drawState(drawer, state);
+          case status.Player_0_turn => state = inputresult._1; turn += 1; drawState(drawer, state);
+          case status.Player_1_turn => state = inputresult._1; turn += 1; drawState(drawer, state);
+          case status.Player_0_won => println("X won");drawState(drawer, state);turn=0
+          case status.Player_1_won => println("O won");drawState(drawer, state);turn=1
+          case status.Draw => System.out.println("Draw");drawState(drawer, state);
           case _ => System.out.println(s"UNHANDLED CASE!");
         }
         tt.setText(s"turn: ${turn+1} "+inputresult._3)
@@ -97,12 +107,5 @@ object Engine extends JFXApp3 {
       }
       drawState(drawer, state);
     }
-  }
-  override def start(): Unit = {
-    stage = new JFXApp3.PrimaryStage {
-      title = "GameBuddy"
-      scene = MenuScene
-    }
-    stage.setResizable(false)
   }
 }
