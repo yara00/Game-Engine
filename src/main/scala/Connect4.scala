@@ -13,7 +13,7 @@ import scala.util.control.Breaks.break
 
 object Connect4 {
   def connect4_initial = Array.fill[String](6,7)(".")
-  val connect4_BOARDWIDTH = 600.0
+  val connect4_BOARDWIDTH = 600
   val connect4_click_handler:click_to_move =(x:Double,y:Double)=>{
     s"${Math.floor(x/(connect4_BOARDWIDTH/7)).toInt}"
   }

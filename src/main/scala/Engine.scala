@@ -2,11 +2,12 @@ import Chess._
 import Connect4._
 import xo._
 import Checkers._
-import definitions._
+import definitions.{click_to_move, controller, drawer, state, _}
 import definitions.status._
 import javafx.geometry.Insets
 import javafx.scene.layout.{Background, BackgroundFill, CornerRadii}
 import javafx.scene.paint.{Color, Paint}
+import menu.MenuScene
 import scalafx.application.JFXApp3
 import scalafx.beans.property.{IntegerProperty, StringProperty}
 import scalafx.scene.Group.sfxGroup2jfx
@@ -17,6 +18,7 @@ import scalafx.scene.layout.{HBox, VBox}
 import scalafx.scene.paint.Color._
 import scalafx.scene.text.{Font, Text}
 import scalafx.scene.{Group, Node, Scene}
+
 import scala.language.postfixOps
 import scala.sys.exit
 
@@ -32,73 +34,7 @@ object Engine extends JFXApp3 {
   //initial value for state is game dependent too
   var state: state = null;
   var turn: turn = 0;
-  def MenuScene = new Scene(600,600){
-    var R = new Group()
-    sfxGroup2jfx(R).getChildren.add(getBackground())
-    //        Engine.stage.title="GameBuddy"
-    val xoICON= getIconXO()
-    val c4ICON= getIconConnect4()
-    val chICON= getIconChess()
-    val ckICON= getIconCheckers()
-    xoICON.onMousePressed = (e)=>{
-      drawer=xo_drawer
-      controller = xo_controller
-      dim = 3
-      BOARDWIDTH = xo_BOARDWIDTH
-      signalingClickCount = 1;
-      state = xo_initial
-      turn = 0;
-      click_to_move = xo_click_handler
-      Engine.stage.scene = generateGameScene();
-    }
 
-
-    c4ICON.onMousePressed= (e:Any) => {
-      drawer=connect4_drawer
-      controller = connect4_controller
-      dim = 7
-      BOARDWIDTH = connect4_BOARDWIDTH
-      signalingClickCount = 1;
-      state = connect4_initial
-      turn = 0;
-      click_to_move=connect4_click_handler
-      Engine.stage.scene = generateGameScene();
-    }
-    chICON.onMousePressed= (e:Any) => {
-      drawer=chess_drawer
-      controller = chess_controller
-      dim = 8
-      BOARDWIDTH = chess_BOARDWIDTH
-      signalingClickCount = 2;
-      state = chess_initial
-      turn = 0;
-      click_to_move=chess_click_handler
-      Engine.stage.scene = generateGameScene();
-    }
-    ckICON.onMousePressed= (e:Any) => {
-      drawer=checkers_drawer
-      controller = checkers_controller
-      dim = 8
-      BOARDWIDTH = checkers_BOARDWIDTH
-      signalingClickCount = 2;
-      state = checkers_initial
-      turn = 0;
-      click_to_move=chess_click_handler
-      Engine.stage.scene = generateGameScene();
-    }
-    val menuH1 = new HBox(100,xoICON,chICON)
-    val menuH2 = new HBox(100,c4ICON,ckICON)
-    val menuAll = new VBox(25,menuH1,menuH2)
-    menuAll.layoutX = 150
-    menuAll.layoutY = 275
-    sfxGroup2jfx(R).getChildren.add(menuAll)
-    content = R
-    this.onKeyPressed = (key)=>{
-      if(key.getCode==27){
-        exit()
-      }
-    }
-  }
   def getBackground(): ImageView ={
     val img = new Image("file:assets/background.png",600,600,true,true)
     val imageView = new ImageView(img)
@@ -128,7 +64,16 @@ object Engine extends JFXApp3 {
     imageView
   }
 
-  def generateGameScene:()=>Scene =()=>{
+  def generateGameScene:(drawer,controller,Int,Int,Int,state,click_to_move)=>Scene =(drawer,controller,dim,BoardWidth,click_count,state_init,click_to_move)=>{
+    this.state=state_init;
+    this.signalingClickCount=click_count
+    this.dim=dim
+    this.click_to_move=click_to_move
+    this.drawer=drawer
+    this.controller=controller
+    this.BOARDWIDTH=BoardWidth
+    this.turn=0
+
     new Scene(BOARDWIDTH,BOARDWIDTH+(TEXTFIELDHEIGHT+1)) {
       //game dependent values:
       //vars and vals engine related
@@ -177,16 +122,11 @@ object Engine extends JFXApp3 {
           processInput(t.getText())
           t.clear()
         }
-        else if(key.getCode.getCode==27){
-          stage.scene = MenuScene
-        }
         else {
           println(key.getCode.getCode+": unhandled key press")
         }
       }
       ROOT.onMousePressed = (ev) => {
-//        val x = Math.floor(ev.getSceneX / (BOARDWIDTH / dim))
-//        val y = Math.floor(ev.getSceneY / (BOARDWIDTH / dim))
         inputBuffer.value += (click_to_move(ev.getSceneX,ev.getSceneY))
         clickcount.value +=1;
         val l = click_to_move(1,1).length
@@ -199,7 +139,7 @@ object Engine extends JFXApp3 {
   }
   override def start(): Unit = {
     stage = new JFXApp3.PrimaryStage {
-      title = "ScalaFX Hello World"
+      title = "GameBuddy"
       scene = MenuScene
     }
     stage.setResizable(false)

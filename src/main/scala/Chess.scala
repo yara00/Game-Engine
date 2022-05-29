@@ -268,7 +268,7 @@ object Chess{
       }
   }
 
-  def isMyKingInDanger(board:state,turn:turn):Boolean={
+  def isMyKingInDanger(board:state,turn:turn):Boolean = {
     var kingPosx = 0
     var kingPosy = 0
     var indanger = false;
