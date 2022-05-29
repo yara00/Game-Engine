@@ -1,8 +1,9 @@
 import Checkers.{checkers_BOARDWIDTH, checkers_click_handler, checkers_controller, checkers_drawer, checkers_initial}
 import Chess.{chess_BOARDWIDTH, chess_click_handler, chess_controller, chess_drawer, chess_initial}
 import Connect4.{connect4_BOARDWIDTH, connect4_click_handler, connect4_controller, connect4_drawer, connect4_initial}
-import Engine.{BOARDWIDTH, click_to_move, controller, dim, drawer, generateGameScene, getBackground, getIconCheckers, getIconChess, getIconConnect4, getIconXO, signalingClickCount, state, turn}
+import Engine.{generateGameScene}
 import scalafx.scene.Group.sfxGroup2jfx
+import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.{Group, Scene}
 import scalafx.scene.layout.{HBox, VBox}
 import xo.{xo_BOARDWIDTH, xo_click_handler, xo_controller, xo_drawer, xo_initial}
@@ -10,6 +11,36 @@ import xo.{xo_BOARDWIDTH, xo_click_handler, xo_controller, xo_drawer, xo_initial
 import scala.sys.exit
 
 object menu {
+  def getBackground(): ImageView ={
+    val img = new Image("file:assets/background.png",600,600,true,true)
+    val imageView = new ImageView(img)
+    imageView
+  }
+
+  def getIconXO(): ImageView ={
+    val img = new Image("file:assets/xo.png",100,100,false,true)
+    val imageView = new ImageView(img)
+    imageView
+  }
+
+  def getIconConnect4(): ImageView ={
+    val img = new Image("file:assets/connect4.png",100,100,true,true)
+    val imageView = new ImageView(img)
+    imageView
+  }
+
+  def getIconCheckers(): ImageView ={
+    val img = new Image("file:assets/checkers.png",100,100,true,true)
+    val imageView = new ImageView(img)
+    imageView
+  }
+  def getIconChess(): ImageView ={
+    val img = new Image("file:assets/chess.png",100,100,true,true)
+    val imageView = new ImageView(img)
+    imageView
+  }
+
+
   def MenuScene = new Scene(600,600){
     var R = new Group()
     sfxGroup2jfx(R).getChildren.add(getBackground())

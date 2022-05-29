@@ -24,55 +24,16 @@ import scala.sys.exit
 
 
 object Engine extends JFXApp3 {
-  var dim: Int=3;   //dimension (8 for chess, 3 for xo , ... )
-  var BOARDWIDTH=600.0;
-  val TEXTFIELDHEIGHT = 20
-  var signalingClickCount = 1       // default is 1
-  var controller: controller = null
-  var drawer: drawer = null
-  var click_to_move:click_to_move=null
-  //initial value for state is game dependent too
-  var state: state = null;
-  var turn: turn = 0;
-
-  def getBackground(): ImageView ={
-    val img = new Image("file:assets/background.png",600,600,true,true)
-    val imageView = new ImageView(img)
-    imageView
-  }
-
-  def getIconXO(): ImageView ={
-    val img = new Image("file:assets/xo.png",100,100,false,true)
-    val imageView = new ImageView(img)
-    imageView
-  }
-
-  def getIconConnect4(): ImageView ={
-    val img = new Image("file:assets/connect4.png",100,100,true,true)
-    val imageView = new ImageView(img)
-    imageView
-  }
-
-  def getIconCheckers(): ImageView ={
-    val img = new Image("file:assets/checkers.png",100,100,true,true)
-    val imageView = new ImageView(img)
-    imageView
-  }
-  def getIconChess(): ImageView ={
-    val img = new Image("file:assets/chess.png",100,100,true,true)
-    val imageView = new ImageView(img)
-    imageView
-  }
-
   def generateGameScene:(drawer,controller,Int,Int,Int,state,click_to_move)=>Scene =(drawer,controller,dim,BoardWidth,click_count,state_init,click_to_move)=>{
-    this.state=state_init;
-    this.signalingClickCount=click_count
-    this.dim=dim
-    this.click_to_move=click_to_move
-    this.drawer=drawer
-    this.controller=controller
-    this.BOARDWIDTH=BoardWidth
-    this.turn=0
+    var state=state_init;
+    val signalingClickCount=click_count
+    val dim=dim
+    val click_to_move: click_to_move = click_to_move
+    val drawer: drawer = drawer
+    val controller: controller = controller
+    val BOARDWIDTH:Int=BoardWidth
+    var turn=0
+    def TEXTFIELDHEIGHT = 20
 
     new Scene(BOARDWIDTH,BOARDWIDTH+(TEXTFIELDHEIGHT+1)) {
       //game dependent values:
